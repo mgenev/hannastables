@@ -473,7 +473,7 @@ class ThemexForm {
 				if($data['slug']=='booking') {
 					$product=ThemexCore::getPostMeta($data['id'], 'product');
 				}
-		
+				// Looks like the place to sent the quantity to woo commerce is here
 				if(ThemexWoo::isActive() && !empty($product)) {				
 					ThemexWoo::addProduct($product);
 					ThemexInterface::$messages[]='<a href="'.ThemexWoo::getURL('checkout').'" class="redirect"></a>';
