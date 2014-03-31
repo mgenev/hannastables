@@ -1,0 +1,89 @@
+.ffmlite_wrap #wp_banner{
+    background: url("../images/banner.jpg") no-repeat scroll center center transparent;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+    height: 131px;
+    margin: 10px 0;
+    padding: 3px;
+    width: 696px;
+}
+
+.ffmlite_wrap #wp_banner #mc-embedded-subscribe-form{
+    margin: 0 0 0 176px;
+    padding: 0;
+}
+
+.ffmlite_wrap #wp_banner #mc_embed_signup .mc-field-group{
+    min-height: 45px;
+    padding-bottom: 0;
+    width: 100%;
+}
+
+.ffmlite_wrap #wp_banner #mc_embed_signup .mc-field-group input[type='email']{
+	background: none repeat scroll 0 0 transparent;
+	border: 0 none;
+	color: #777777;
+	display: block;
+	float: left;
+	font-family: verdana;
+	font-size: 14px;
+	font-weight: bold;
+	margin-top: 6px;
+	padding: 8px 0;
+	text-indent: 2%;
+	width: 68%;
+}
+.ffmlite_wrap #wp_banner #mc_embed_signup .mc-field-group input[type='submit']{
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    clear: none;
+    float: left;
+    margin: 6px 0 0 8px;
+    width: 27%;
+}
+
+.ffmlite_wrap #wp_banner .bot_section{
+	width:100%;
+	height:86px;
+}
+
+.ffmlite_wrap #wp_banner .bot_section a{
+	float:left;
+	display:block;
+	width:45px;
+	height:45px;
+	margin-top: 15px;
+	outline:none;
+}
+
+.ffmlite_wrap #wp_banner .bot_section a.wplogo{
+    height: 70px;
+    margin-left: 271px;
+    width: 150px;
+}
+.ffmlite_wrap #wp_banner .bot_section a.fbicon{
+    margin-left: 138px;
+}
+.ffmlite_wrap #wp_banner .bot_section a.twicon{
+	margin-left:15px;
+}
+
+iframe.ffm_iframe{
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+    left: 0;
+    padding: 5px;
+    position: relative;
+    top: 0;
+    z-index: 1;
+}
+
+#ffm_options_form td:first-child{
+	width:35%;
+	vertical-align:top;
+	font-weight:bold;
+}
+
+#ffm_options_form input[type="text"]{
+	width:250px;
+}

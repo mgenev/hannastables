@@ -2,13 +2,13 @@
 
 /*
 * Title                   : Booking System PRO (WordPress Plugin)
-* Version                 : 1.8
+* Version                 : 1.2
 * File                    : doptg-frontend.php
 * File Version            : 1.0
 * Created / Last Modified : 15 July 2012
-* Author                  : Dot on Paper
-* Copyright               : © 2012 Dot on Paper
-* Website                 : http://www.dotonpaper.net
+* Author                  : Marius-Cristian Donea
+* Copyright               : © 2012 Marius-Cristian Donea
+* Website                 : http://www.mariuscristiandonea.com
 * Description             : Booking System PRO Front End AJAX.
 */
 

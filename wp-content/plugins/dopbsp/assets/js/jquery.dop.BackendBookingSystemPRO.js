@@ -1,20 +1,19 @@
 
 /*
 * Title                   : Booking System PRO (WordPress Plugin)
-* Version                 : 1.8
+* Version                 : 1.2
 * File                    : jquery.dop.BackendBookingSystemPRO.js
-* File Version            : 1.7
-* Created / Last Modified : 01 November 2013
-* Author                  : Dot on Paper
-* Copyright               : © 2012 Dot on Paper
-* Website                 : http://www.dotonpaper.net
+* File Version            : 1.2
+* Created / Last Modified : 01 November 2012
+* Author                  : Marius-Cristian Donea
+* Copyright               : © 2011 Marius-Cristian Donea
+* Website                 : http://www.mariuscristiandonea.com
 * Description             : Booking System PRO Back End jQuery plugin.
 */
 
 (function($){
     $.fn.DOPBookingSystemPRO = function(options){
-        var Data = {'AddLastHourToTotalPrice': true,
-                    'AddtMonthViewText': 'Add Month View',
+        var Data = {'AddtMonthViewText': 'Add Month View',
                     'AvailableDays': [true, true, true, true, true, true, true],
                     'AvailableLabel': 'No. Available',
                     'AvailableOneText': 'available',
@@ -25,8 +24,6 @@
                     'DateStartLabel': 'Start Date',
                     'DateType': 1,
                     'DayNames': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-                    'DetailsFromHours': true,
-                    'FirstDay': 1,
                     'HoursEnabled': false,
                     'GroupDaysLabel': 'Group Days',
                     'GroupHoursLabel': 'Group Hours',
@@ -37,7 +34,6 @@
                     'HoursDefinitionsChangeLabel': 'Change Hours Definitions (changing the definitions will overwrite any previous hours data)',
                     'HoursDefinitionsLabel': 'Hours Definitions (hh:mm add one per line)',
                     'HoursSetDefaultDataLabel': 'Set default hours values for this day(s). This will overwrite any existing data.)',
-                    'HoursIntervalEnabled': false,
                     'ID': 0,
                     'InfoLabel': 'Information (users will see this message)',
                     'MaxYear': new Date().getFullYear(),
@@ -47,7 +43,6 @@
                     'PreviousMonthText': 'Previous Month',
                     'PriceLabel': 'Price',
                     'PromoLabel': 'Promo Price',
-                    'Reinitialize': false,
                     'RemoveMonthViewText': 'Remove Month View',
                     'ResetConfirmation': 'Are you sure you want to reset data? If you reset days, hours data from those days will be reset to.',
                     'StatusAvailableText': 'Available',
@@ -67,7 +62,6 @@
         CurrYear = StartYear,
         CurrMonth = StartMonth,
 
-        AddLastHourToTotalPrice = true,
         AddtMonthViewText = 'Add Month View',
         AvailableDays = [true, true, true, true, true, true, true],
         AvailableLabel = 'No. Available',
@@ -79,8 +73,6 @@
         DateStartLabel = 'Start Date',
         DateType = 1,
         DayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        DetailsFromHours = true,
-        FirstDay = 1,
         HoursEnabled = true,
         GroupDaysLabel = 'Group Days',
         GroupHoursLabel = 'Group Hours',
@@ -91,7 +83,6 @@
         HoursDefinitionsChangeLabel = 'Change Hours Definitions (changing the definitions will overwrite any previous hours data)',
         HoursDefinitionsLabel = 'Hours Definitions (hh:mm add one per line)',
         HoursSetDefaultDataLabel = 'Set default hours values for this day(s). This will overwrite any existing data.)',
-        HoursIntervalEnabled = false,
         ID = 0,
         InfoLabel = 'Informations',
         MaxYear = new Date().getFullYear(),
@@ -110,16 +101,12 @@
         StatusUnavailableText = 'Unavailable',
         UnavailableText = 'unavailable',
         
-        showCalendar = true,
-        firstYearLoaded = false,
-        
         noMonths = 1,
         dayStartSelection,
         dayEndSelection,
         dayFirstSelected = false,
         dayTimeDisplay = false,
         dayStartSelectionCurrMonth,
-        dayNo = 0,
         
         hourStartSelection,
         hourEndSelection,
@@ -137,15 +124,10 @@
                             if (options){
                                 $.extend(Data, options);
                             }
-                            
-                            if (!$(Container).hasClass('dopbsp-initialized') || Data['Reinitialize']){
-                                $(Container).addClass('dopbsp-initialized');
-                                methods.parseData();
-                            }
+                            methods.parseData();
                         });
                     },
                     parseData:function(){
-                        AddLastHourToTotalPrice = Data['AddLastHourToTotalPrice'] == 'true' ? true:false;
                         AddtMonthViewText = Data['AddtMonthViewText'];
                         AvailableDays[0] = Data['AvailableDays'][0] == "true" ? true:false;
                         AvailableDays[1] = Data['AvailableDays'][1] == "true" ? true:false;
@@ -163,8 +145,6 @@
                         DateStartLabel = Data['DateStartLabel'];
                         DateType = Data['DateType'];
                         DayNames = Data['DayNames'];
-                        DetailsFromHours = Data['DetailsFromHours'] == 'true' ? true:false;
-                        FirstDay = Data['FirstDay'];
                         HoursEnabled = Data['HoursEnabled'] == 'true' ? true:false;
                         GroupDaysLabel = Data['GroupDaysLabel'];
                         GroupHoursLabel = Data['GroupHoursLabel'];
@@ -175,7 +155,6 @@
                         HoursDefinitionsChangeLabel = Data['HoursDefinitionsChangeLabel'];
                         HoursDefinitionsLabel = Data['HoursDefinitionsLabel'];
                         HoursSetDefaultDataLabel = Data['HoursSetDefaultDataLabel'];
-                        HoursIntervalEnabled = Data['HoursIntervalEnabled'] == 'true' ? true:false;
                         ID = Data['ID'];
                         InfoLabel = Data['InfoLabel'];
                         MaxYear = Data['MaxYear'];
@@ -195,46 +174,26 @@
                         UnavailableText = Data['UnavailableText'];
                         
                         methods.parseCalendarData(new Date().getFullYear());
+                        
                     },
-                    parseCalendarData:function(year){
+                    parseCalendarData:function(year){                        
                         $.post(ajaxurl, {action:'dopbsp_load_schedule', calendar_id:ID, year:year}, function(data){
                             if ($.trim(data) != ''){
                                 $.extend(Schedule, JSON.parse($.trim(data)));
                             }
-                            
-                            if (showCalendar && (StartMonth < 12-noMonths+1 || firstYearLoaded || year == MaxYear)){
-                                showCalendar = false;
+                                                       
+                            if (year == MaxYear){
                                 dopbspToggleMessage('hide', DOPBSP_CALENDAR_LOADED);
                                 methods.initCalendar();
                             }
-                            
-                            if (!firstYearLoaded){
-                                firstYearLoaded = true;
-                            }
-                                                       
-                            if (year < MaxYear){
+                            else{
                                 methods.parseCalendarData(year+1);
                             }
                         });
                     },
-                    doMetaboxHideBuster:function(){
-                        var isHidden = false;
-                        
-                        if ($('#dopsbsp-custom-post-meta').hasClass('closed')){
-                            $('#dopsbsp-custom-post-meta').removeClass('closed');
-                            isHidden = true;
-                        }
-                        
-                        return isHidden;
-                    },
-                    undoMetaboxHideBuster:function(wasHidden){
-                        if (wasHidden){
-                            $('#dopsbsp-custom-post-meta').addClass('closed');
-                        }
-                    },
 
                     initCalendar:function(){// Init  Calendar
-                        var HTML = new Array(), no;
+                        var HTML = new Array();
                         
                         HTML.push('<div class="DOPBookingSystemPRO_Container">');                        
                         HTML.push('    <div class="DOPBookingSystemPRO_Navigation">');
@@ -244,32 +203,20 @@
                         HTML.push('        <div class="next_btn" title="'+NextMonthText+'"></div>');
                         HTML.push('        <div class="month_year"></div>');
                         HTML.push('        <div class="week">');
-                        HTML.push('            <div class="day"></div>');
-                        HTML.push('            <div class="day"></div>');
-                        HTML.push('            <div class="day"></div>');
-                        HTML.push('            <div class="day"></div>');
-                        HTML.push('            <div class="day"></div>');
-                        HTML.push('            <div class="day"></div>');
-                        HTML.push('            <div class="day"></div><br style="clear:both;" />');
+                        HTML.push('            <div class="day">'+DayNames[1]+'</div>');
+                        HTML.push('            <div class="day">'+DayNames[2]+'</div>');
+                        HTML.push('            <div class="day">'+DayNames[3]+'</div>');
+                        HTML.push('            <div class="day">'+DayNames[4]+'</div>');
+                        HTML.push('            <div class="day">'+DayNames[5]+'</div>');
+                        HTML.push('            <div class="day">'+DayNames[6]+'</div>');
+                        HTML.push('            <div class="day">'+DayNames[0]+'</div><br style="clear:both;" />');
                         HTML.push('        </div>');
                         HTML.push('    </div>');
                         HTML.push('    <div class="DOPBookingSystemPRO_Calendar"></div>');
                         HTML.push('</div>');
 
                         Container.html(HTML.join(''));
-                        $('.DOPBookingSystemPRO_Info').remove();
                         $('body').append('<div class="DOPBookingSystemPRO_Info" id="DOPBookingSystemPRO_Info'+ID+'"></div>');
-                        
-                        no = FirstDay-1;
-                        
-                        $('.DOPBookingSystemPRO_Navigation .week .day', Container).each(function(){
-                            no++;
-                            
-                            if (no == 7){
-                                no = 0;
-                            }
-                            $(this).html(DayNames[no]);
-                        });
                         
                         methods.initSettings();
                     },
@@ -277,48 +224,15 @@
                         methods.initContainer();
                         methods.initNavigation();
                         methods.initInfo();
-                        methods.initExternalCheck();
                         methods.generateCalendar(StartYear, StartMonth);
                     },
                     initContainer:function(){// Init  Container
-                        var wasHidden = methods.doMetaboxHideBuster();
-                        
                         $('.DOPBookingSystemPRO_Container', Container).width(Container.width());
-                        methods.undoMetaboxHideBuster(wasHidden);
                     },
                     initNavigation:function(){// Init Navigation
-                        var wasHidden = methods.doMetaboxHideBuster();
-                        
                         $('.DOPBookingSystemPRO_Navigation .week .day', Container).width(parseInt(($('.DOPBookingSystemPRO_Navigation .week', Container).width()-parseInt($('.DOPBookingSystemPRO_Navigation .week', Container).css('padding-left'))+parseInt($('.DOPBookingSystemPRO_Navigation .week', Container).css('padding-right')))/7));
-                        methods.undoMetaboxHideBuster(wasHidden);
                         
-                        if (!prototypes.isTouchDevice()){
-                            $('.DOPBookingSystemPRO_Navigation .previous_btn', Container).hover(function(){
-                                $(this).addClass('hover');
-                            }, function(){
-                                $(this).removeClass('hover');
-                            });
-
-                            $('.DOPBookingSystemPRO_Navigation .next_btn', Container).hover(function(){
-                                $(this).addClass('hover');
-                            }, function(){
-                                $(this).removeClass('hover');
-                            });
-
-                            $('.DOPBookingSystemPRO_Navigation .add_btn', Container).hover(function(){
-                                $(this).addClass('hover');
-                            }, function(){
-                                $(this).removeClass('hover');
-                            });
-
-                            $('.DOPBookingSystemPRO_Navigation .remove_btn', Container).hover(function(){
-                                $(this).addClass('hover');
-                            }, function(){
-                                $(this).removeClass('hover');
-                            });
-                        }
-                        
-                        $('.DOPBookingSystemPRO_Navigation .previous_btn', Container).click(function(){
+                        $('.DOPBookingSystemPRO_Navigation .previous_btn', Container).click(function(){                                                            
                             methods.generateCalendar(StartYear, CurrMonth-1);
 
                             if (CurrMonth == StartMonth){
@@ -326,7 +240,7 @@
                             }
                         });
                         
-                        $('.DOPBookingSystemPRO_Navigation .next_btn', Container).click(function(){
+                        $('.DOPBookingSystemPRO_Navigation .next_btn', Container).click(function(){;
                             methods.generateCalendar(StartYear, CurrMonth+1);
                             $('.DOPBookingSystemPRO_Navigation .previous_btn', Container).css('display', 'block');
                         });
@@ -348,11 +262,16 @@
                                 $('.DOPBookingSystemPRO_Navigation .remove_btn', Container).css('display', 'none');
                             }
                         });
+                        
+                        $('#DOPBSP-reservations').unbind('click');
+                        $('#DOPBSP-reservations').bind('click', function(){
+                            methods.showReservations();
+                        });
                     },
                     
-                    generateCalendar:function(year, month){// Init Calendar   
+                    generateCalendar:function(year, month){// Init Calendar       
                         CurrYear = new Date(year, month, 0).getFullYear();
-                        CurrMonth = parseInt(month, 10);    
+                        CurrMonth = month;    
                                                 
                         $('.DOPBookingSystemPRO_Navigation .month_year', Container).html(MonthNames[(CurrMonth%12 != 0 ? CurrMonth%12:12)-1]+' '+CurrYear);                        
                         $('.DOPBookingSystemPRO_Calendar', Container).html('');                        
@@ -371,13 +290,11 @@
                         var i, d, cyear, cmonth, cday, start, totalDays = 0,
                         noDays = new Date(year, month, 0).getDate(),
                         noDaysPreviousMonth = new Date(year, month-1, 0).getDate(),
-                        firstDay = new Date(year, month-1, 2-FirstDay).getDay(),
-                        lastDay = new Date(year, month-1, noDays-FirstDay+1).getDay(),
+                        firstDay = new Date(year, month-1, 1).getDay(),
+                        lastDay = new Date(year, month-1, noDays).getDay(),
                         monthHTML = new Array(), 
                         day = methods.defaultDay();
-                                 
-                        dayNo = 0;
-                        
+                                                
                         monthHTML.push('<div class="DOPBookingSystemPRO_Month">');
                         
                         if (position > 1){
@@ -482,14 +399,12 @@
                         contentLine1 = '&nbsp;', 
                         contentLine2 = '&nbsp;';
                         
-                        dayNo++;
-                        
                         if (price > 0 && (bind == 0 || bind == 1)){
-                            contentLine1 = Currency+prototypes.getWithDecimals(price, 2);
+                            contentLine1 = Currency+price;
                         }
                                                 
                         if (promo > 0 && (bind == 0 || bind == 1)){
-                            contentLine1 = Currency+prototypes.getWithDecimals(promo, 2);
+                            contentLine1 = Currency+promo;
                         }
 
                         if (type != 'past_day'){
@@ -537,14 +452,6 @@
                                     break;
                             }
                         }
-                        
-                        if (dayNo % 7 == 1){
-                            type += ' first-column';
-                        }
-                        
-                        if (dayNo % 7 == 0){
-                            type += ' last-column';
-                        }
                                                 
                         dayHTML.push('<div class="DOPBookingSystemPRO_Day '+type+'" id="'+id+'">');
                         dayHTML.push('    <div class="bind-left'+(bind == 2 || bind == 3 ? '  enabled':'')+'">');
@@ -555,15 +462,15 @@
                         dayHTML.push('        <div class="header">');
                         dayHTML.push('            <div class="day">'+day+'</div>');
                         
-                        if (HoursEnabled && type.indexOf('past_day') == -1 && (bind == 0 || bind == 3)){
+                        if (HoursEnabled && type != 'past_day' && status != 'unavailable' && (bind == 0 || bind == 3)){
                             dayHTML.push('            <div class="hours" id="'+id+'_hours"></div>');
                         }
                         
-                        if (notes != '' && type.indexOf('past_day') == -1 && (bind == 0 || bind == 3)){
+                        if (notes != '' && type != 'past_day' && (bind == 0 || bind == 3)){
                             dayHTML.push('            <div class="notes" id="'+id+'_notes"></div>');
                         }   
                         
-                        if (info != '' && type.indexOf('past_day') == -1 && (bind == 0 || bind == 3)){
+                        if (info != '' && type != 'past_day' && (bind == 0 || bind == 3)){
                             dayHTML.push('            <div class="info" id="'+id+'_info"></div>');
                         }                     
                         dayHTML.push('            <br class="DOPBookingSystemPRO_Clear" />');
@@ -572,7 +479,7 @@
                         dayHTML.push('            <div class="price">'+contentLine1+'</div>');
                         
                         if (promo > 0 && (bind == 0 || bind == 1)){
-                            dayHTML.push('            <div class="old-price">'+Currency+prototypes.getWithDecimals(price)+'</div>');
+                            dayHTML.push('            <div class="old-price">'+Currency+price+'</div>');
                         }
                         dayHTML.push('            <br class="DOPBookingSystemPRO_Clear" />');
                         dayHTML.push('            <div class="available">'+contentLine2+'</div>');
@@ -598,27 +505,24 @@
                                 "status": AvailableDays[day] ? "none":"unavailable"}
                     },
                     customizeDays:function(){
-                        var maxHeight = 0,
-                        wasHidden = methods.doMetaboxHideBuster();
-                        
+                        var maxHeight = 0;
                         
                         $('.DOPBookingSystemPRO_Day', Container).width(parseInt(($('.DOPBookingSystemPRO_Month', Container).width()-parseInt($('.DOPBookingSystemPRO_Month', Container).css('padding-left'))+parseInt($('.DOPBookingSystemPRO_Month', Container).css('padding-right')))/7));
                         $('.DOPBookingSystemPRO_Day .bind-content', Container).width($('.DOPBookingSystemPRO_Day', Container).width()-2);
                         
-                        $('.DOPBookingSystemPRO_Day .bind-content .content', Container).each(function(){
+                        $('.DOPBookingSystemPRO_Day .content', Container).each(function(){
                             if (maxHeight < $(this).height()){
                                 maxHeight = $(this).height();
                             }
                         });
                         
                         $('.DOPBookingSystemPRO_Day .content', Container).height(maxHeight);
-                        methods.undoMetaboxHideBuster(wasHidden);
                     },                    
                     initDayEvents:function(){// Init Events for the days of the Calendar.
                         $('.DOPBookingSystemPRO_Day .hours', Container).unbind('click');
                         $('.DOPBookingSystemPRO_Day .hours', Container).bind('click', function(){
                             dayTimeDisplay = true;
-                            methods.initHours(ID+'_'+$(this).attr('id').split('_')[1]);
+                            methods.initHours($(this).attr('id'));
                         });
                         
                         $('.DOPBookingSystemPRO_Day', Container).unbind('click');
@@ -660,12 +564,6 @@
                             if (dayFirstSelected){
                                 methods.showDaySelection(day.attr('id'));
                             }
-                                    
-                            if (HoursEnabled && !day.hasClass('selected')){
-                                methods.showInfo($(this).attr('id').split('_')[1], '', 'hours', methods.initHoursInfo(day.attr('id')));
-                            }
-                        }, function(){
-                            methods.hideInfo();
                         });
                         
                         $('.DOPBookingSystemPRO_Day .notes', Container).hover(function(){
@@ -720,7 +618,6 @@
                     initHours:function(id){
                         var HTML = new Array(), i,
                         hoursDef = HoursDefinitions,
-                        hoursContainer,
                         date = id.split('_')[1],
                         year = date.split('-')[0],
                         month = date.split('-')[1],
@@ -746,7 +643,7 @@
                             hoursDef = Schedule[date]['hours_definitions'];
                         }
                         
-                        for (i=0; i<hoursDef.length-(HoursIntervalEnabled || !AddLastHourToTotalPrice  ? 1:0); i++){
+                        for (i=0; i<hoursDef.length; i++){
                             if (Schedule[date] != undefined && Schedule[date]['hours'][hoursDef[i]['value']] != undefined){
                                 hour = Schedule[date]['hours'][hoursDef[i]['value']];
                             }
@@ -757,72 +654,19 @@
                             if (hoursDef[i]['value'] < prototypes.timeLongItem(currHour)+':'+prototypes.timeLongItem(currMin) && StartYear+'-'+prototypes.timeLongItem(StartMonth)+'-'+prototypes.timeLongItem(StartDay) == year+'-'+month+'-'+day){                                
                                 HTML.push(methods.initHour(ID+'_'+hoursDef[i]['value'],
                                                            hoursDef[i]['value'],
-                                                           hour['available'], hour['bind'], hour['info'], hour['notes'], hour['price'], hour['promo'], 'past_hour', hoursDef));
+                                                           hour['available'], hour['bind'], hour['info'], hour['notes'], hour['price'], hour['promo'], 'past_hour'));
                             }
                             else{
                                 HTML.push(methods.initHour(ID+'_'+hoursDef[i]['value'],
                                                            hoursDef[i]['value'],
-                                                           hour['available'], hour['bind'], hour['info'], hour['notes'], hour['price'], hour['promo'], hour['status'], hoursDef));
+                                                           hour['available'], hour['bind'], hour['info'], hour['notes'], hour['price'], hour['promo'], hour['status']));
                             }
-                        }
+                        }   
                         
-                        if ($('#'+id).hasClass('next_month')){
-                            $('.DOPBookingSystemPRO_Hours', Container).each(function(){
-                                hoursContainer = $(this);
-                            });
-                            hoursContainer.html(HTML.join(''));
-                        }
-                        else if ($('#'+id).hasClass('last_month')){
-                            $($('.DOPBookingSystemPRO_Hours', Container).get().reverse()).each(function(){
-                                hoursContainer = $(this);
-                            });
-                            hoursContainer.html(HTML.join(''));
-                        }
-                        else{
-                            $('#'+ID+'_'+year+'-'+month+'_hours').html(HTML.join(''));
-                        }
-                        
+                        $('#'+ID+'_'+year+'-'+month+'_hours').html(HTML.join(''));
                         methods.initHourEvents();
                     },
-                    initHoursInfo:function(id){
-                        var HTML = new Array(), i,
-                        hoursDef = HoursDefinitions,
-                        date = id.split('_')[1],
-                        year = date.split('-')[0],
-                        month = date.split('-')[1],
-                        day = date.split('-')[2],
-                        hour,
-                        currTime = new Date(),
-                        currHour = currTime.getHours(),
-                        currMin = currTime.getMinutes();
-                        
-                        if (Schedule[date] != undefined){
-                            hoursDef = Schedule[date]['hours_definitions'];
-                        }   
-                        
-                        for (i=0; i<hoursDef.length-(HoursIntervalEnabled || !AddLastHourToTotalPrice  ? 1:0); i++){
-                            if (Schedule[date] != undefined && Schedule[date]['hours'][hoursDef[i]['value']] != undefined){
-                                hour = Schedule[date]['hours'][hoursDef[i]['value']];
-                            }
-                            else{
-                                hour = methods.defaultHour();
-                            }
-                            
-                            if (hoursDef[i]['value'] < prototypes.timeLongItem(currHour)+':'+prototypes.timeLongItem(currMin) && StartYear+'-'+prototypes.timeLongItem(StartMonth)+'-'+prototypes.timeLongItem(StartDay) == year+'-'+month+'-'+day){                                
-                                HTML.push(methods.initHour(ID+'_'+hoursDef[i]['value'].split(':')[0]+'-'+hoursDef[i]['value'].split(':')[1],
-                                                           hoursDef[i]['value'],
-                                                           hour['available'], hour['bind'], '', '', hour['price'], hour['promo'], 'past_hour', hoursDef));
-                            }
-                            else{
-                                HTML.push(methods.initHour(ID+'_'+hoursDef[i]['value'].split(':')[0]+'-'+hoursDef[i]['value'].split(':')[1],
-                                                           hoursDef[i]['value'],
-                                                           hour['available'], hour['bind'], '', '', hour['price'], hour['promo'], hour['status'], hoursDef));
-                            }
-                        }   
-                        
-                        return HTML.join('');
-                    },
-                    initHour:function(id, hour, available, bind, info, notes, price, promo, status, hoursDef){
+                    initHour:function(id, hour, available, bind, info, notes, price, promo, status){
                         var hourHTML = new Array(),
                         priceContent = '&nbsp;',
                         availableContent = '&nbsp;',
@@ -830,11 +674,11 @@
                         
                         if (status != 'past_hour'){
                             if (price > 0 && (bind == 0 || bind == 1)){
-                                priceContent = Currency+prototypes.getWithDecimals(price, 2);
+                                priceContent = Currency+price;
                             }
 
                             if (promo > 0 && (bind == 0 || bind == 1)){
-                                priceContent = Currency+prototypes.getWithDecimals(promo, 2);
+                                priceContent = Currency+promo;
                             }
 
                             switch (status){
@@ -886,16 +730,16 @@
                         }
             
                         hourHTML.push('<div class="DOPBookingSystemPRO_Hour'+type+'" id="'+id+'">');
-                        hourHTML.push('    <div class="bind-top'+(bind == 2 || bind == 3 ? '  enabled':'')+'"><div class="hour">&nbsp;</div><br class="DOPBookingSystemPRO_Clear" /></div>');                        
+                        hourHTML.push('    <div class="bind-top'+(bind == 2 || bind == 3 ? '  enabled':'')+'"><div class="hour">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div><br class="DOPBookingSystemPRO_Clear" /></div>');                        
                         hourHTML.push('    <div class="bind-content group'+bind+'">');
-                        hourHTML.push('        <div class="hour">'+(HoursAMPM ? prototypes.timeToAMPM(hour):hour)+(HoursIntervalEnabled ? ' - '+(HoursAMPM ? prototypes.timeToAMPM(methods.nextHour(hour, hoursDef)):methods.nextHour(hour, hoursDef)):'')+'</div>');
+                        hourHTML.push('        <div class="hour">'+(HoursAMPM ? prototypes.timeToAMPM(hour):hour)+'</div>');
                         
                         if (price > 0 && type != 'past_hour' && (bind == 0 || bind == 1)){
                             hourHTML.push('        <div class="'+(promo > 0 ? 'price-promo':'price')+'">'+priceContent+'</div>');      
                         }
                         
                         if (promo > 0 && type != 'past_hour' && (bind == 0 || bind == 1)){                                      
-                            hourHTML.push('        <div class="old-price">'+Currency+prototypes.getWithDecimals(price)+'</div>');
+                            hourHTML.push('        <div class="old-price">'+Currency+price+'</div>');
                         }                        
                         hourHTML.push('        <div class="available">'+availableContent+'</div>');
                         
@@ -908,7 +752,7 @@
                         }
                         hourHTML.push('        <br class="DOPBookingSystemPRO_Clear" />');
                         hourHTML.push('    </div>');
-                        hourHTML.push('    <div class="bind-bottom'+(bind == 1 || bind == 2 ? '  enabled':'')+'"><div class="hour">&nbsp;</div><br class="DOPBookingSystemPRO_Clear" /></div>');
+                        hourHTML.push('    <div class="bind-bottom'+(bind == 1 || bind == 2 ? '  enabled':'')+'"><div class="hour">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div><br class="DOPBookingSystemPRO_Clear" /></div>');
                         hourHTML.push('</div>');
                         
                         return hourHTML.join('');
@@ -1009,9 +853,8 @@
                             $('#DOPBookingSystemPRO_Info'+ID).css({'left': xPos, 'top': yPos});
                         }); 
                     },
-                    
-                    showInfo:function(date, hour, type, infoData){
-                        var info = infoData != undefined ? infoData:(hour == '' ? Schedule[date][type]:Schedule[date]['hours'][hour][type]);
+                    showInfo:function(date, hour, type){
+                        var info = hour == '' ? Schedule[date][type]:Schedule[date]['hours'][hour][type];
                         
                         $('#DOPBookingSystemPRO_Info'+ID).html(info);
                         $('#DOPBookingSystemPRO_Info'+ID).css('display', 'block');                         
@@ -1024,7 +867,6 @@
                         var headerHTML = new Array(),
                         HTML = new Array(),
                         hours = '', i,
-                        hoursDef = HoursDefinitions,
                         startDate, sYear, sMonth, sMonthText, sDay,
                         endDate, eYear, eMonth, eMonthText, eDay,
                         startHour, sHour, sMinute,
@@ -1039,13 +881,13 @@
                                     hours += HoursDefinitions[i]['value']+'\n';
                                 }
                             }
-                            hoursDef = HoursDefinitions;
                         }
                         
                         // ***************************************************** Start Form Buttons   
                         headerHTML.push('<input type="button" name="DOPBSP_submit" id="DOPBSP_submit" class="submit-style" title="Submit" value="Submit" />');
                         headerHTML.push('<input type="button" name="DOPBSP_reset" id="DOPBSP_reset" class="submit-style" title="Reset" value="Reset" />');
                         headerHTML.push('<input type="button" name="DOPBSP_close" id="DOPBSP_close" class="submit-style" title="Close" value="Close" />');
+                        headerHTML.push('<a href="javascript:void()" class="header-help" title="help"></a>');
                         // ***************************************************** End Form Buttons   
                         
                         HTML.push('<div class="DOPBookingSystemPRO_Form">');
@@ -1089,8 +931,6 @@
                                 startHour = hourStartSelection.split('_')[1];
                                 endHour = hourEndSelection.split('_')[1];
                             }
-                            
-                            hoursDef = Schedule[startDate] != undefined ? Schedule[startDate]['hours_definitions']:HoursDefinitions;
 
                             sHour = startHour.split(':')[0];
                             sMinute = startHour.split(':')[1];
@@ -1139,7 +979,7 @@
                             HTML.push('                <br class="DOPBSP-clear" />');  
                             HTML.push('            </div>');   
                             
-                            if (hourStartSelection != hourEndSelection || HoursIntervalEnabled){
+                            if (hourStartSelection != hourEndSelection){
                                 HTML.push('            <div class="section-item">');
                                 HTML.push('                <label class="left">'+HourStartLabel+'</label>');
                                 HTML.push('                <span class="date">'+(HoursAMPM ? prototypes.timeToAMPM(sHour+':'+sMinute):(sHour+':'+sMinute))+'</span>');
@@ -1147,7 +987,7 @@
                                 HTML.push('            </div>');
                                 HTML.push('            <div class="section-item">');
                                 HTML.push('                <label class="left">'+HourEndLabel+'</label>');
-                                HTML.push('                <span class="date">'+(HoursAMPM ? prototypes.timeToAMPM(HoursIntervalEnabled ? methods.nextHour(eHour+':'+eMinute, hoursDef):eHour+':'+eMinute):(HoursIntervalEnabled ? methods.nextHour(eHour+':'+eMinute, hoursDef):eHour+':'+eMinute))+'</span>');
+                                HTML.push('                <span class="date">'+(HoursAMPM ? prototypes.timeToAMPM(eHour+':'+eMinute):(eHour+':'+eMinute))+'</span>');
                                 HTML.push('                <br class="DOPBSP-clear" />');  
                                 HTML.push('            </div>');
                             }
@@ -1163,18 +1003,18 @@
                         
                         // ***************************************************** Start Form Fields
                         HTML.push('        <div class="section'+(type == "days" && HoursEnabled ? '':' last')+'">');
+                        HTML.push('            <div class="section-item">');  
+                        HTML.push('                <label class="type2" for="DOPBSP_status">'+StatusLabel+'</label>');
+                        HTML.push('                <select name="DOPBSP_status" id="DOPBSP_status">');
+                        HTML.push('                    <option value="available">'+StatusAvailableText+'</option>');
+                        HTML.push('                    <option value="booked">'+StatusBookedText+'</option>');
+                        HTML.push('                    <option value="special">'+StatusSpecialText+'</option>');
+                        HTML.push('                    <option value="unavailable">'+StatusUnavailableText+'</option>');
+                        HTML.push('                </select>');
+                        HTML.push('                <br class="DOPBSP-clear" />');
+                        HTML.push('            </div>');     
                         
-                        if ((type == 'days' && !HoursEnabled) || (type == 'days' && HoursEnabled && !DetailsFromHours) || type == 'hours'){
-                            HTML.push('            <div class="section-item">');  
-                            HTML.push('                <label class="type2" for="DOPBSP_status">'+StatusLabel+'</label>');
-                            HTML.push('                <select name="DOPBSP_status" id="DOPBSP_status">');
-                            HTML.push('                    <option value="available">'+StatusAvailableText+'</option>');
-                            HTML.push('                    <option value="booked">'+StatusBookedText+'</option>');
-                            HTML.push('                    <option value="special">'+StatusSpecialText+'</option>');
-                            HTML.push('                    <option value="unavailable">'+StatusUnavailableText+'</option>');
-                            HTML.push('                </select>');
-                            HTML.push('                <br class="DOPBSP-clear" />');
-                            HTML.push('            </div>');     
+                        if ((type == 'days' && !HoursEnabled) || type == 'hours'){
                             HTML.push('            <div class="section-item">');
                             HTML.push('                <label class="type2" for="DOPBSP_price">'+PriceLabel+'</label>');
                             HTML.push('                <input type="text" name="DOPBSP_price" id="DOPBSP_price" value="" /><span class="currency">'+Currency+'</span>');
@@ -1185,12 +1025,12 @@
                             HTML.push('                <input type="text" name="DOPBSP_promo" id="DOPBSP_promo" value="" disabled="disabled" /><span class="currency">'+Currency+'</span>'); 
                             HTML.push('                <br class="DOPBSP-clear" />');
                             HTML.push('            </div>');
-                            HTML.push('            <div class="section-item">');
-                            HTML.push('                <label class="type2" for="DOPBSP_available">'+AvailableLabel+'</label>');
-                            HTML.push('                <input type="text" name="DOPBSP_available" id="DOPBSP_available" value="1" />');
-                            HTML.push('                <br class="DOPBSP-clear" />');
-                            HTML.push('            </div>');
                         }
+                        HTML.push('            <div class="section-item">');
+                        HTML.push('                <label class="type2" for="DOPBSP_available">'+AvailableLabel+'</label>');
+                        HTML.push('                <input type="text" name="DOPBSP_available" id="DOPBSP_available" value="1" />');
+                        HTML.push('                <br class="DOPBSP-clear" />');
+                        HTML.push('            </div>');
                         HTML.push('            <div class="section-item">');
                         HTML.push('                <label class="type3" for="DOPBSP_info">'+InfoLabel+'</label>');
                         HTML.push('                <textarea name="DOPBSP_info" id="DOPBSP_info"></textarea>');  
@@ -1276,60 +1116,68 @@
                         dopbspResizeOneTime();
 
                         // ----------------------------------------------------- Start Form Actions
-                        if ((type == 'days' && !HoursEnabled) || (type == 'days' && HoursEnabled && !DetailsFromHours) || type == 'hours'){
-                            $('#DOPBSP_status').unbind('change');
-                            $('#DOPBSP_status').bind('change', function(){
-                                switch ($(this).val()){
-                                    case 'available':
+                        $('#DOPBSP_status').unbind('change');
+                        $('#DOPBSP_status').bind('change', function(){
+                            switch ($(this).val()){
+                                case 'available':
+                                    if ((type == 'days' && !HoursEnabled) || type != 'days'){
                                         $('#DOPBSP_price').removeAttr('disabled');
                                         $('#DOPBSP_promo').attr('disabled', 'disabled');
-                                        $('#DOPBSP_available').removeAttr('disabled');
-                                        $('#DOPBSP_available').val('1');
-
-                                        if (startDate != endDate && (type != 'days' && !HoursEnabled)){
-                                            $('#DOPBSP_group').removeAttr('disabled');
-                                        }
-                                        break;
-                                    case 'booked':
+                                    }
+                                    $('#DOPBSP_available').removeAttr('disabled');
+                                    $('#DOPBSP_available').val('1');
+                                    
+                                    if (startDate != endDate && (type != 'days' && !HoursEnabled)){
+                                        $('#DOPBSP_group').removeAttr('disabled');
+                                    }
+                                    break;
+                                case 'booked':
+                                    if ((type == 'days' && !HoursEnabled) || type != 'days'){
                                         $('#DOPBSP_price').attr('disabled', 'disabled');
                                         $('#DOPBSP_promo').attr('disabled', 'disabled');
                                         $('#DOPBSP_price').val('');
                                         $('#DOPBSP_promo').val('');
-                                        $('#DOPBSP_available').attr('disabled', 'disabled');
-                                        $('#DOPBSP_available').val('');
-
-                                        if (startDate != endDate && (type != 'days' && !HoursEnabled)){
-                                            $('#DOPBSP_group').removeAttr('disabled');
-                                        }
-                                        break;
-                                    case 'special':
+                                    }
+                                    $('#DOPBSP_available').attr('disabled', 'disabled');
+                                    $('#DOPBSP_available').val('');
+                                    
+                                    if (startDate != endDate && (type != 'days' && !HoursEnabled)){
+                                        $('#DOPBSP_group').removeAttr('disabled');
+                                    }
+                                    break;
+                                case 'special':
+                                    if ((type == 'days' && !HoursEnabled) || type != 'days'){
                                         $('#DOPBSP_price').removeAttr('disabled');
                                         $('#DOPBSP_promo').attr('disabled', 'disabled');
-                                        $('#DOPBSP_available').removeAttr('disabled');
-                                        $('#DOPBSP_available').val('1');
-
-                                        if (startDate != endDate && (type != 'days' && !HoursEnabled)){
-                                            $('#DOPBSP_group').removeAttr('disabled');
-                                        }
-                                        break;
-                                    case 'unavailable':
+                                    }
+                                    $('#DOPBSP_available').removeAttr('disabled');
+                                    $('#DOPBSP_available').val('1');
+                                    
+                                    if (startDate != endDate && (type != 'days' && !HoursEnabled)){
+                                        $('#DOPBSP_group').removeAttr('disabled');
+                                    }
+                                    break;
+                                case 'unavailable':
+                                    if ((type == 'days' && !HoursEnabled) || type != 'days'){
                                         $('#DOPBSP_price').attr('disabled', 'disabled');
                                         $('#DOPBSP_promo').attr('disabled', 'disabled');
                                         $('#DOPBSP_price').val('');
                                         $('#DOPBSP_promo').val('');
-                                        $('#DOPBSP_available').attr('disabled', 'disabled');
-                                        $('#DOPBSP_available').val('');
-
-                                        if (startDate != endDate && (type != 'days' && !HoursEnabled)){
-                                            $('#DOPBSP_group').attr('disabled', 'disabled');
-                                        }
-                                        break;
-                                }
-                            });
+                                    }
+                                    $('#DOPBSP_available').attr('disabled', 'disabled');
+                                    $('#DOPBSP_available').val('');
+                                    
+                                    if (startDate != endDate && (type != 'days' && !HoursEnabled)){
+                                        $('#DOPBSP_group').attr('disabled', 'disabled');
+                                    }
+                                    break;
+                            }
+                        });
                         
+                        if ((type == 'days' && !HoursEnabled) || type == 'hours'){
                             $('#DOPBSP_price').unbind('keyup');
                             $('#DOPBSP_price').bind('keyup', function(){
-                                prototypes.cleanInput(this, '0123456789.', '', '');
+                                prototypes.cleanInput(this, '0123456789.', '0', '');
 
                                 if ($(this).val() > '0'){
                                     $('#DOPBSP_promo').removeAttr('disabled');
@@ -1342,11 +1190,10 @@
 
                             $('#DOPBSP_promo').unbind('keyup');
                             $('#DOPBSP_promo').bind('keyup', function(){
-                                prototypes.cleanInput(this, '0123456789.', '', '');
+                                prototypes.cleanInput(this, '0123456789.', '0', '');
                             });
                         }
-                        
-                        if (type == 'days' && HoursEnabled){
+                        else{
                             $('#DOPBSP_hours_status').unbind('change');
                             $('#DOPBSP_hours_status').bind('change', function(){
                                 switch ($(this).val()){
@@ -1383,7 +1230,7 @@
                             
                             $('#DOPBSP_hours_price').unbind('keyup');
                             $('#DOPBSP_hours_price').bind('keyup', function(){
-                                prototypes.cleanInput(this, '0123456789.', '', '');
+                                prototypes.cleanInput(this, '0123456789.', '0', '');
 
                                 if ($(this).val() > '0'){
                                     $('#DOPBSP_hours_promo').removeAttr('disabled');
@@ -1396,7 +1243,7 @@
 
                             $('#DOPBSP_hours_promo').unbind('keyup');
                             $('#DOPBSP_hours_promo').bind('keyup', function(){
-                                prototypes.cleanInput(this, '0123456789.', '', '');
+                                prototypes.cleanInput(this, '0123456789.', '0', '');
                             });
                                                 
                             $('#DOPBSP_hours_available').unbind('keyup');
@@ -1449,7 +1296,7 @@
                         startHour, sHour, sMinute,
                         endHour, eHour, eMinute,
                         fromMonth, toMonth, fromDay, toDay,
-                        availableValue = $('#DOPBSP_available').val() != undefined ? $('#DOPBSP_available').val():'',
+                        availableValue = $('#DOPBSP_available').val(),
                         bindValue = 0,
                         hoursValue = {},
                         hoursDefinitionsValue,
@@ -1457,7 +1304,7 @@
                         notesValue = $('#DOPBSP_notes').val().replace(/\n/gi, '<br />'),
                         priceValue = $('#DOPBSP_price').val() != undefined ? $('#DOPBSP_price').val():'',
                         promoValue = $('#DOPBSP_promo').val() != undefined ? $('#DOPBSP_promo').val():'',
-                        statusValue = $('#DOPBSP_status').val() != undefined ? $('#DOPBSP_status').val():'',
+                        statusValue = $('#DOPBSP_status').val(),
                         hoursAvailableValue = $('#DOPBSP_set_hours_default_data').is(':checked') && $('#DOPBSP_hours_available').val() != undefined ? $('#DOPBSP_hours_available').val():'',
                         hoursInfoValue = $('#DOPBSP_set_hours_default_data').is(':checked') && $('#DOPBSP_hours_info').val() != undefined ? $('#DOPBSP_hours_info').val().replace(/\n/gi, '<br />'):'',
                         hoursNotesValue = $('#DOPBSP_set_hours_default_data').is(':checked') && $('#DOPBSP_hours_notes').val() != undefined ? $('#DOPBSP_hours_notes').val().replace(/\n/gi, '<br />'):'',
@@ -1511,10 +1358,6 @@
                                     if (hoursDefinitions[i] != ''){
                                         hours.push({'value': hoursDefinitions[i]});
                                         hoursValue[hoursDefinitions[i]] = hourDefaultValue;
-                                        
-                                        if ((HoursIntervalEnabled || !AddLastHourToTotalPrice) && i == hoursDefinitions.length-1){
-                                             hoursValue[hoursDefinitions[i]] = methods.defaultHour();
-                                        }
                                     }
                                 }
                             }
@@ -1524,19 +1367,11 @@
                                 if (Schedule[key] != undefined){
                                     for (i=0; i<Schedule[key]['hours_definitions'].length; i++){
                                         hoursValue[Schedule[key]['hours_definitions'][i]['value']] = hourDefaultValue;
-                                        
-                                        if ((HoursIntervalEnabled || !AddLastHourToTotalPrice) && i == Schedule[key]['hours_definitions'].length-1){
-                                            hoursValue[Schedule[key]['hours_definitions'][i]['value']] = methods.defaultHour();
-                                        }
                                     }
                                 }
                                 else{
                                     for (i=0; i<HoursDefinitions.length; i++){
                                         hoursValue[HoursDefinitions[i]['value']] = hourDefaultValue;
-                                        
-                                        if ((HoursIntervalEnabled || !AddLastHourToTotalPrice) && i == HoursDefinitions.length-1){
-                                            hoursValue[HoursDefinitions[i]['value']] = methods.defaultHour();
-                                        }
                                     }
                                 }
                             }
@@ -1570,52 +1405,48 @@
 
                                     for (d=fromDay; d<=toDay; d++){
                                         key = y+'-'+prototypes.timeLongItem(m)+'-'+prototypes.timeLongItem(d);
-                                            
-                                        if (AvailableDays[methods.weekDay(y, m, d)] || startDate == endDate){
-                                            if ($('#DOPBSP_group').is(':checked')){
-                                                if (key == startDate){
-                                                    bindValue = 1;
-                                                }                 
-                                                else if (key == endDate){
-                                                    bindValue = 3;
-                                                }   
-                                                else{
-                                                    bindValue = 2;                                            
-                                                }
-                                            }
 
-                                            if ($('#DOPBSP_change_hours_definitions').is(':checked') && $('#DOPBSP_hours_definitions').val() != undefined && $('#DOPBSP_hours_definitions').val() != ''){
-                                                hoursDefinitionsValue = hours;
-                                            }
+                                        if ($('#DOPBSP_group').is(':checked')){
+                                            if (key == startDate){
+                                                bindValue = 1;
+                                            }                 
+                                            else if (key == endDate){
+                                                bindValue = 3;
+                                            }   
                                             else{
-                                                if (Schedule[key] != undefined){
-                                                    hoursValue = $('#DOPBSP_set_hours_default_data').is(':checked') ? hoursValue:Schedule[key]['hours'];
-                                                    hoursDefinitionsValue = Schedule[key]['hours_definitions'];
-                                                }
-                                                else{
-                                                    hoursDefinitionsValue = HoursDefinitions;
-                                                }
-                                            }
-
-                                            Schedule[key] = {"available": availableValue,
-                                                             "bind": bindValue,
-                                                             "hours": $.extend(true, {}, hoursValue),
-                                                             "hours_definitions": hoursDefinitionsValue,
-                                                             "info": infoValue,
-                                                             "notes": notesValue,
-                                                             "price": priceValue,
-                                                             "promo": promoValue,
-                                                             "status": statusValue};
-
-                                            if (HoursEnabled && DetailsFromHours){
-                                                methods.setDayFromHours(key);
+                                                bindValue = 2;                                            
                                             }
                                         }
+                                        
+                                        if ($('#DOPBSP_change_hours_definitions').is(':checked') && $('#DOPBSP_hours_definitions').val() != undefined && $('#DOPBSP_hours_definitions').val() != ''){
+                                            hoursDefinitionsValue = hours;
+                                        }
+                                        else{
+                                            if (Schedule[key] != undefined){
+                                                hoursValue = $('#DOPBSP_set_hours_default_data').is(':checked') ? hoursValue:Schedule[key]['hours'];
+                                                hoursDefinitionsValue = Schedule[key]['hours_definitions'];
+                                            }
+                                            else{
+                                                hoursDefinitionsValue = HoursDefinitions;
+                                            }
+                                        }
+                                        
+                                        console.log(hoursDefinitionsValue);
+
+                                        Schedule[key] = {"available": availableValue,
+                                                         "bind": bindValue,
+                                                         "hours": $.extend(true, {}, hoursValue),
+                                                         "hours_definitions": hoursDefinitionsValue,
+                                                         "info": infoValue,
+                                                         "notes": notesValue,
+                                                         "price": priceValue,
+                                                         "promo": promoValue,
+                                                         "status": statusValue};
                                     }
                                 }
                             }
                             
-                            methods.generateCalendar(startDate.split('-')[0], startDate.split('-')[1]); 
+                            methods.generateCalendar(StartYear, dayStartSelectionCurrMonth); 
                         }
                         else{
                             startDate = hourDaySelection.split('_')[1];
@@ -1686,11 +1517,6 @@
                                 }
                             }
                             
-                            if (HoursEnabled && DetailsFromHours){
-                                methods.setDayFromHours(startDate);
-                                methods.generateCalendar(startDate.split('-')[0], startDate.split('-')[1]); 
-                            }
-                            
                             methods.initHours(hourDaySelection);
                             window.location = '#'+ID+'_'+startHour;                            
                             $('body').scrollTop($('body').scrollTop()-50);
@@ -1718,8 +1544,6 @@
                         nextMonth = month == 12 ? 1:month+1,
                         startDate = dayStartSelection < dayEndSelection ? dayStartSelection.split('_')[1]:dayEndSelection.split('_')[1],
                         endDate = dayStartSelection < dayEndSelection ? dayEndSelection.split('_')[1]:dayStartSelection.split('_')[1];
-                
-                        CurrMonth = (year-StartYear)*12+month;
                         
                         for (var day in Schedule){
                             if (day.indexOf(year+'-'+prototypes.timeLongItem(month)) != -1){
@@ -1730,14 +1554,14 @@
                         }         
                             
                         if (yearStartSave != year || monthStartSave != month){
-                            methods.generateCalendar(StartYear, CurrMonth);
+                            methods.generateCalendar(StartYear, CurrMonth+1);
                         
                             if (StartMonth != month){
                                 $('.DOPBookingSystemPRO_Navigation .previous_btn', Container).css('display', 'block');
                             }
                         }
 
-                        $.post(ajaxurl, {action:'dopbsp_save_schedule', calendar_id:ID, schedule:schedule}, function(data){    
+                        $.post(ajaxurl, {action:'dopbsp_save_schedule', calendar_id:ID, schedule:schedule}, function(data){                            
                             if (year == yearEndSave && month == monthEndSave){
                                 dopbspToggleMessage('success', data);
                             }                            
@@ -1806,10 +1630,6 @@
                                         Schedule[sYear+'-'+sMonth+'-'+sDay]['hours'][key] = methods.defaultHour();
                                     }
                                 }
-                            
-                                if (HoursEnabled && DetailsFromHours){
-                                    methods.setDayFromHours(startDate);
-                                }
 
                                 methods.initHours(hourDaySelection);
                                 window.location = '#'+ID+'_'+startHour;                            
@@ -1850,16 +1670,12 @@
                             
                         if (yearStartSave != year || monthStartSave != month){
                             methods.generateCalendar(StartYear, CurrMonth+1);
-                        
-                            if (StartMonth != month){
-                                $('.DOPBookingSystemPRO_Navigation .previous_btn', Container).css('display', 'block');
-                            }
                         }
                         else{
                             methods.generateCalendar(StartYear, dayStartSelectionCurrMonth); 
                         }
 
-                        $.post(ajaxurl, {action: 'dopbsp_delete_schedule', calendar_id: ID, schedule: schedule}, function(data){                            
+                        $.post(ajaxurl, {action:'dopbsp_delete_schedule', calendar_id:ID, schedule:schedule}, function(data){                            
                             if (year == yearEndSave && month == monthEndSave){
                                 dopbspToggleMessage('success', data);
                             }                            
@@ -1867,52 +1683,6 @@
                                 methods.deleteDataSection(nextYear, nextMonth);                     
                             }   
                         });
-                    },
-                    setDayFromHours:function(day){
-                        if (Schedule[day] != undefined){
-                            var available = 0,
-                            price = '',
-                            status = 'none';
-                                
-                            for (var hour in Schedule[day]['hours']){
-                                // No Available Check
-                                if (Schedule[day]['hours'][hour]['bind'] == 0 || Schedule[day]['hours'][hour]['bind'] == 1){
-                                    if (Schedule[day]['hours'][hour]['available'] != ''){
-                                        available += parseInt(Schedule[day]['hours'][hour]['available']);
-                                    }
-
-                                    // Price Check
-                                    if (Schedule[day]['hours'][hour]['price'] != '' && (price == '' || parseFloat(Schedule[day]['hours'][hour]['price']) < price)){
-                                        price = parseFloat(Schedule[day]['hours'][hour]['price']);
-                                    }
-
-                                    if (Schedule[day]['hours'][hour]['promo'] != '' && (price == '' || parseFloat(Schedule[day]['hours'][hour]['promo']) < price)){
-                                        price = parseFloat(Schedule[day]['hours'][hour]['promo']);
-                                    }
-
-                                    // Status Check
-                                    if (Schedule[day]['hours'][hour]['status'] == 'unavailable' && status == 'none'){
-                                        status = 'unavailable';
-                                    }
-
-                                    if (Schedule[day]['hours'][hour]['status'] == 'booked' && (status == 'none' || status == 'unavailable')){
-                                        status = 'booked';
-                                    }
-
-                                    if (Schedule[day]['hours'][hour]['status'] == 'special' && (status == 'none' || status == 'unavailable' || status == 'booked')){
-                                        status = 'special';
-                                    }
-
-                                    if (Schedule[day]['hours'][hour]['status'] == 'available'){
-                                        status = 'available';
-                                    }
-                                }
-                            }
-                            
-                            Schedule[day]['available'] = available == 0 ? '':available;
-                            Schedule[day]['price'] = price;
-                            Schedule[day]['status'] = status;
-                        }
                     },
                                         
                     previousDay:function(date){
@@ -1942,19 +1712,8 @@
                     yearMonth:function(year, month){
                         return new Date(year, month, 0).getMonth();
                     },
-                    nextHour:function(hour, hours){
-                        var nextHour = '24:00', i;
-                        
-                        for (i=hours.length-1; i>=0; i--){
-                            if (hours[i]['value'] > hour){
-                                nextHour = hours[i]['value'];
-                            }
-                        }
-                        
-                        return nextHour;
-                    },
                     previousHour:function(hour, hours){
-                        var previousHour = '00:00', i;
+                        var previousHour, i;
                         
                         for (i=0; i<hours.length; i++){
                             if (hours[i]['value'] < hour){
@@ -1964,40 +1723,162 @@
                         
                         return previousHour;
                     },
-                    initExternalCheck:function(){
-                        if ($('#calendar_jump_to_day').val() != ''){
-                            var date = $('#calendar_jump_to_day').val(),
-                            year = parseInt(date.split('-')[0], 10),
-                            month = parseInt(date.split('-')[1], 10);
-                            
-                            $('#calendar_jump_to_day').val('');
-                            methods.generateCalendar(StartYear, (year-StartYear)*12+month);
-                            
-                            $('body').animate({scrollTop:0}, 'slow', function(){
-                                $('#'+ID+'_'+date).addClass('day-jump');
-                            
-                                setTimeout(function(){
-                                    $('#'+ID+'_'+date).removeClass('day-jump');
-                                }, 1200);
-                            });
+                    nextHour:function(hour, hours){
+                        var nextHour, i;
+                        
+                        for (i=hours.length-1; i>=0; i--){
+                            if (hours[i]['value'] > hour){
+                                nextHour = hours[i]['value'];
+                            }
                         }
                         
-                        if ($('#calendar_refresh').val() != ''){
-                            $('#calendar_refresh').val('');
-                            showCalendar = true;
-                            firstYearLoaded = false;
+                        return nextHour;
+                    },
+                    
+                    showReservations:function(){
+                        if (clearClick){
+                            dopbspRemoveColumns(3);
                             dopbspToggleMessage('show', DOPBSP_LOAD);
-                            methods.parseCalendarData(new Date().getFullYear());
-                        }
                             
-                        setTimeout(function(){
-                            methods.initExternalCheck();
-                        }, 500);
+                            $.post(ajaxurl, {action:'dopbsp_show_reservations', calendar_id:ID}, function(data){
+                                $('.DOPBSP-admin .column3 .column-content').html(data);
+                                dopbspToggleMessage('hide', '');
+                                
+                                methods.initToggleReservation();
+                                methods.initJumpDayReservation();
+                                methods.initApproveReservation();
+                                methods.initRejectReservation(); 
+                                methods.initCancelReservation();                                
+                            });                        
+                        }
+                    },
+                    initToggleReservation:function(id){                        
+                        $('.DOPBookingSystemPRO_Reservation .toggle').unbind('click');
+                        $('.DOPBookingSystemPRO_Reservation .toggle').bind('click', function(){
+                            var id = $(this).attr('id').split('DOPBSP_Reservation_ToggleID')[1];
+
+                            $('.DOPBookingSystemPRO_Day', Container).removeClass('selected');
+                            $('.DOPBookingSystemPRO_Hour', Container).removeClass('selected');
+                            $('.DOPBookingSystemPRO_Reservation .section.content').css('display', 'none');
+
+                            if ($('#DOPBSP_Reservation_ToggleID'+id).html() == '+'){
+                                $('.DOPBookingSystemPRO_Reservation .toggle').html('+'); 
+                                $('#DOPBSP_Reservation_ToggleID'+id).html('-');
+                                $('#DOPBSP_Reservation_ContentID'+id).css('display', 'block');
+                            }
+                            else{ 
+                                $('.DOPBookingSystemPRO_Reservation .toggle').html('+');                           
+                            }
+                        });                                
+                    },
+                    initJumpDayReservation:function(){                                
+                        $('.DOPBookingSystemPRO_Message_JumpDay').unbind('click');
+                        $('.DOPBookingSystemPRO_Message_JumpDay').bind('click', function(){
+                            var date = $(this).attr('id').split('DOPBookingSystemPRO_Message_JumpDay_')[1],
+                            year = parseInt(date.split('-')[0], 10),
+                            month = parseInt(date.split('-')[1], 10);
+
+                            methods.generateCalendar(StartYear, (year-StartYear)*12+month);
+                        });
+                    },
+                    initApproveReservation:function(){                                
+                        $('.DOPBookingSystemPRO_ReservationApprove').unbind('click');
+                        $('.DOPBookingSystemPRO_ReservationApprove').bind('click', function(){
+                            if (clearClick){
+                                if (confirm(DOPBSP_RESERVATIONS_APPROVE_CONFIRMATION)){
+                                    var id = $(this).attr('id').split('DOPBookingSystemPRO_ReservationApprove')[1],
+                                    year, month;
+
+                                    dopbspMoveTop();
+                                    dopbspToggleMessage('show', DOPBSP_SAVE);
+                                    
+                                    $.post(ajaxurl, {action:'dopbsp_approve_reservation', calendar_id:ID, reservation_id:id}, function(data){
+                                        data = $.trim(data);
+                                        year = parseInt(data.split('-')[0]);
+                                        month = parseInt(data.split('-')[1]);
+                                        
+                                        for (var day in Schedule){
+                                            if (day.indexOf(year) != -1){                                      
+                                                delete Schedule[day];
+                                            }                            
+                                        }
+                        
+                                        $.post(ajaxurl, {action:'dopbsp_load_schedule', calendar_id:ID, year:year}, function(data){
+                                            dopbspToggleMessage('hide', DOPBSP_RESERVATIONS_APPROVE_SUCCESS);
+                                                
+                                            if ($.trim(data) != ''){
+                                                $.extend(Schedule, JSON.parse($.trim(data)));
+                                            }
+                                            
+                                            $('#DOPBSP_Reservation_StatusID'+id).html(DOPBSP_RESERVATIONS_STATUS_APPROVED);
+                                            $('#DOPBookingSystemPRO_ReservationApprove'+id).css('display', 'none');
+                                            $('#DOPBookingSystemPRO_ReservationReject'+id).css('display', 'none');
+                                            $('#DOPBookingSystemPRO_ReservationCancel'+id).css('display', 'inline-block');
+                                            methods.generateCalendar(StartYear, (year-StartYear)*12+month);
+                                        });
+                                    });   
+                                }
+                            }
+                        }); 
+                    },
+                    initRejectReservation:function(){                                
+                        $('.DOPBookingSystemPRO_ReservationReject').unbind('click');
+                        $('.DOPBookingSystemPRO_ReservationReject').bind('click', function(){
+                            if (clearClick){
+                                if (confirm(DOPBSP_RESERVATIONS_REJECT_CONFIRMATION)){
+                                    var id = $(this).attr('id').split('DOPBookingSystemPRO_ReservationReject')[1],
+                                    noReservations = 0;
+
+                                    dopbspToggleMessage('show', DOPBSP_SAVE);
+    
+                                    $.post(ajaxurl, {action:'dopbsp_reject_reservation', calendar_id:ID, reservation_id:id}, function(data){
+                                        noReservations = parseInt($('#DOPBSP-reservations span').html(), 10)-1;
+                                        $('#DOPBSP_Reservation_ID'+id).css('display', 'none');
+                                        
+                                        if (noReservations == 0){                                            
+                                            $('#DOPBSP-reservations').removeClass('new');
+                                            $('#DOPBSP-reservations span').html('');
+                                        }
+                                        else{                                            
+                                            $('#DOPBSP-reservations span').html(noReservations);
+                                        }
+                                        dopbspToggleMessage('hide', DOPBSP_RESERVATIONS_REJECT_SUCCESS);
+                                    });
+                                }
+                            }
+                        });                        
+                    },
+                    initCancelReservation:function(){                                
+                        $('.DOPBookingSystemPRO_ReservationCancel').unbind('click');
+                        $('.DOPBookingSystemPRO_ReservationCancel').bind('click', function(){
+                            if (clearClick){
+                                if (confirm(DOPBSP_RESERVATIONS_CANCEL_CONFIRMATION)){
+                                    var id = $(this).attr('id').split('DOPBookingSystemPRO_ReservationCancel')[1],
+                                    noReservations = 0;
+
+                                    dopbspToggleMessage('show', DOPBSP_SAVE);
+                                    
+                                    $.post(ajaxurl, {action:'dopbsp_cancel_reservation', calendar_id:ID, reservation_id:id}, function(data){
+                                        noReservations = parseInt($('#DOPBSP-reservations span').html(), 10)-1;
+                                        $('#DOPBSP_Reservation_ID'+id).css('display', 'none');
+                                        
+                                        if (noReservations == 0){                                            
+                                            $('#DOPBSP-reservations').removeClass('new');
+                                            $('#DOPBSP-reservations span').html('');
+                                        }
+                                        else{                                            
+                                            $('#DOPBSP-reservations span').html(noReservations);
+                                        }
+                                        dopbspToggleMessage('hide', DOPBSP_RESERVATIONS_CANCEL_SUCCESS);
+                                    });
+                                }
+                            }
+                        });                        
                     }
                   },
 
         prototypes = {
-                        resizeItem:function(parent, child, cw, ch, dw, dh, pos){// Resize & Position an item (the item is 100% visible)
+                        resizeItem:function(parent, child, cw, ch, dw, dh, pos){// Resize & Position an Item (the item is 100% visible)
                             var currW = 0, currH = 0;
 
                             if (dw <= cw && dh <= ch){
@@ -2064,7 +1945,7 @@
                                     break;
                             }
                         },
-                        resizeItem2:function(parent, child, cw, ch, dw, dh, pos){// Resize & Position an item (the item covers all the container)
+                        resizeItem2:function(parent, child, cw, ch, dw, dh, pos){// Resize & Position an Item (the item covers all the container)
                             var currW = 0, currH = 0;
 
                             currH = ch;
@@ -2127,143 +2008,68 @@
                             }
                         },
 
-                        topItem:function(parent, child, ch){// Position item on Top
+                        topItem:function(parent, child, ch){// Position Item on Top
                             parent.height(ch);
                             child.css('margin-top', 0);
                         },
-                        bottomItem:function(parent, child, ch){// Position item on Bottom
+                        bottomItem:function(parent, child, ch){// Position Item on Bottom
                             parent.height(ch);
                             child.css('margin-top', ch-child.height());
                         },
-                        leftItem:function(parent, child, cw){// Position item on Left
+                        leftItem:function(parent, child, cw){// Position Item on Left
                             parent.width(cw);
                             child.css('margin-left', 0);
                         },
-                        rightItem:function(parent, child, cw){// Position item on Right
+                        rightItem:function(parent, child, cw){// Position Item on Right
                             parent.width(cw);
                             child.css('margin-left', parent.width()-child.width());
                         },
-                        hCenterItem:function(parent, child, cw){// Position item on Horizontal Center
+                        hCenterItem:function(parent, child, cw){// Position Item on Horizontal Center
                             parent.width(cw);
                             child.css('margin-left', (cw-child.width())/2);
                         },
-                        vCenterItem:function(parent, child, ch){// Position item on Vertical Center
+                        vCenterItem:function(parent, child, ch){// Position Item on Vertical Center
                             parent.height(ch);
                             child.css('margin-top', (ch-child.height())/2);
                         },
-                        centerItem:function(parent, child, cw, ch){// Position item on Center
+                        centerItem:function(parent, child, cw, ch){// Position Item on Center
                             prototypes.hCenterItem(parent, child, cw);
                             prototypes.vCenterItem(parent, child, ch);
                         },
-                        tlItem:function(parent, child, cw, ch){// Position item on Top-Left
+                        tlItem:function(parent, child, cw, ch){// Position Item on Top-Left
                             prototypes.topItem(parent, child, ch);
                             prototypes.leftItem(parent, child, cw);
                         },
-                        tcItem:function(parent, child, cw, ch){// Position item on Top-Center
+                        tcItem:function(parent, child, cw, ch){// Position Item on Top-Center
                             prototypes.topItem(parent, child, ch);
                             prototypes.hCenterItem(parent, child, cw);
                         },
-                        trItem:function(parent, child, cw, ch){// Position item on Top-Right
+                        trItem:function(parent, child, cw, ch){// Position Item on Top-Right
                             prototypes.topItem(parent, child, ch);
                             prototypes.rightItem(parent, child, cw);
                         },
-                        mlItem:function(parent, child, cw, ch){// Position item on Middle-Left
+                        mlItem:function(parent, child, cw, ch){// Position Item on Middle-Left
                             prototypes.vCenterItem(parent, child, ch);
                             prototypes.leftItem(parent, child, cw);
                         },
-                        mrItem:function(parent, child, cw, ch){// Position item on Middle-Right
+                        mrItem:function(parent, child, cw, ch){// Position Item on Middle-Right
                             prototypes.vCenterItem(parent, child, ch);
                             prototypes.rightItem(parent, child, cw);
                         },
-                        blItem:function(parent, child, cw, ch){// Position item on Bottom-Left
+                        blItem:function(parent, child, cw, ch){// Position Item on Bottom-Left
                             prototypes.bottomItem(parent, child, ch);
                             prototypes.leftItem(parent, child, cw);
                         },
-                        bcItem:function(parent, child, cw, ch){// Position item on Bottom-Center
+                        bcItem:function(parent, child, cw, ch){// Position Item on Bottom-Center
                             prototypes.bottomItem(parent, child, ch);
                             prototypes.hCenterItem(parent, child, cw);
                         },
-                        brItem:function(parent, child, cw, ch){// Position item on Bottom-Right
+                        brItem:function(parent, child, cw, ch){// Position Item on Bottom-Right
                             prototypes.bottomItem(parent, child, ch);
                             prototypes.rightItem(parent, child, cw);
                         },
-                        
-                        touchNavigation:function(parent, child){// One finger navigation for touchscreen devices
-                            var prevX, prevY, currX, currY, touch, childX, childY;
-                            
-                            parent.bind('touchstart', function(e){
-                                touch = e.originalEvent.touches[0];
-                                prevX = touch.clientX;
-                                prevY = touch.clientY;
-                            });
 
-                            parent.bind('touchmove', function(e){                                
-                                touch = e.originalEvent.touches[0];
-                                currX = touch.clientX;
-                                currY = touch.clientY;
-                                childX = currX>prevX ? parseInt(child.css('margin-left'))+(currX-prevX):parseInt(child.css('margin-left'))-(prevX-currX);
-                                childY = currY>prevY ? parseInt(child.css('margin-top'))+(currY-prevY):parseInt(child.css('margin-top'))-(prevY-currY);
-
-                                if (childX < (-1)*(child.width()-parent.width())){
-                                    childX = (-1)*(child.width()-parent.width());
-                                }
-                                else if (childX > 0){
-                                    childX = 0;
-                                }
-                                else{                                    
-                                    e.preventDefault();
-                                }
-
-                                if (childY < (-1)*(child.height()-parent.height())){
-                                    childY = (-1)*(child.height()-parent.height());
-                                }
-                                else if (childY > 0){
-                                    childY = 0;
-                                }
-                                else{                                    
-                                    e.preventDefault();
-                                }
-
-                                prevX = currX;
-                                prevY = currY;
-
-                                if (parent.width() < child.width()){
-                                    child.css('margin-left', childX);
-                                }
-                                
-                                if (parent.height() < child.height()){
-                                    child.css('margin-top', childY);
-                                }
-                            });
-
-                            parent.bind('touchend', function(e){
-                                if (!prototypes.isChromeMobileBrowser()){
-                                    e.preventDefault();
-                                }
-                            });
-                        },
-
-			rgb2hex:function(rgb){// Convert RGB color to HEX
-                            var hexDigits = new Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
-
-                            rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-
-                            return (isNaN(rgb[1]) ? '00':hexDigits[(rgb[1]-rgb[1]%16)/16]+hexDigits[rgb[1]%16])+
-                                   (isNaN(rgb[2]) ? '00':hexDigits[(rgb[2]-rgb[2]%16)/16]+hexDigits[rgb[2]%16])+
-                                   (isNaN(rgb[3]) ? '00':hexDigits[(rgb[3]-rgb[3]%16)/16]+hexDigits[rgb[3]%16]);
-			},
-			idealTextColor:function(bgColor){// Set text color depending on the background color
-			    var rgb = /rgb\((\d+).*?(\d+).*?(\d+)\)/.exec(bgColor);
-    
-			    if (rgb != null){
-			        return parseInt(rgb[1], 10)+parseInt(rgb[2], 10)+parseInt(rgb[3], 10) < 3*256/2 ? 'white' : 'black';
-			    }
-			    else{
-			        return parseInt(bgColor.substring(0, 2), 16)+parseInt(bgColor.substring(2, 4), 16)+parseInt(bgColor.substring(4, 6), 16) < 3*256/2 ? 'white' : 'black';
-			    }
-			},
-
-                        dateDiference:function(date1, date2){// Diference between 2 dates
+                        dateDiference:function(date1, date2){
                             var time1 = date1.getTime(),
                             time2 = date2.getTime(),
                             diff = Math.abs(time1-time2),
@@ -2271,41 +2077,7 @@
                             
                             return parseInt(diff/(one_day))+1;
                         },
-                        previousTime:function(time, size, type){
-                            var timePieces = time.split(':'),
-                            hours = parseInt(timePieces[0], 10),
-                            minutes = timePieces[1] == undefined ? 0:parseInt(timePieces[1], 10),
-                            seconds = timePieces[2] == undefined ? 0:parseInt(timePieces[2], 10);
-                            
-                            switch (type){
-                                case 'seconds':
-                                    seconds = seconds-size;
-                                    
-                                    if (seconds < 0){
-                                        seconds = 60+seconds;
-                                        minutes = minutes-1;
-                                        
-                                        if (minutes < 0){
-                                            minutes = 60+minutes;
-                                            hours = hours-1 < 0 ? 0:hours-1;
-                                        }
-                                    }
-                                    break;
-                                case 'minutes':
-                                        minutes = minutes-size;
-                                        
-                                        if (minutes < 0){
-                                            minutes = 60+minutes;
-                                            hours = hours-1 < 0 ? 0:hours-1;
-                                        }
-                                    break;
-                                default:
-                                    hours = hours-size < 0 ? 0:hours-size;
-                            }
-                            
-                            return prototypes.timeLongItem(hours)+(timePieces[1] == undefined ? '':':'+prototypes.timeLongItem(minutes)+(timePieces[2] == undefined ? '':':'+prototypes.timeLongItem(seconds)));
-                        },
-                        noDays:function(date1, date2){// Returns no of days between 2 days
+                        noDays:function(date1, date2){
                             var time1 = date1.getTime(),
                             time2 = date2.getTime(),
                             diff = Math.abs(time1-time2),
@@ -2313,7 +2085,7 @@
                             
                             return Math.round(diff/(one_day))+1;
                         },
-                        timeLongItem:function(item){// Return day/month with 0 in front if smaller then 10
+                        timeLongItem:function(item){// Return month with 0 in front if smaller then 10.
                             if (item < 10){
                                 return '0'+item;
                             }
@@ -2321,7 +2093,7 @@
                                 return item;
                             }
                         },
-                        timeToAMPM:function(item){// Returns time in AM/PM format
+                        timeToAMPM:function(item){
                             var hour = parseInt(item.split(':')[0], 10),
                             minutes = item.split(':')[1],
                             result = '';
@@ -2341,7 +2113,7 @@
                             return result;
                         },
 
-                        stripslashes:function(str){// Remove slashes from string
+                        stripslashes:function(str){
                             return (str + '').replace(/\\(.?)/g, function (s, n1) {
                                 switch (n1){
                                     case '\\':
@@ -2391,36 +2163,124 @@
                             }
                             return isIE;
                         },
-                        isChromeMobileBrowser:function(){// Detect the browser Mobile Chrome
-                            var isChromeMobile = false,
-                            agent = navigator.userAgent.toLowerCase();
-                            
-                            if ((agent.indexOf('chrome') != -1 || agent.indexOf('crios') != -1) && prototypes.isTouchDevice()){
-                                isChromeMobile = true;
-                            }
-                            return isChromeMobile;
-                        },
-                        isAndroid:function(){// Detect the browser Mobile Chrome
-                            var isAndroid = false,
+                        isTouchDevice:function(){// Detect Touchscreen devices
+                            var isTouch = false,
                             agent = navigator.userAgent.toLowerCase();
 
                             if (agent.indexOf('android') != -1){
-                                isAndroid = true;
+                                isTouch = true;
                             }
-                            return isAndroid;
+                            if (agent.indexOf('blackberry') != -1){
+                                isTouch = true;
+                            }
+                            if (agent.indexOf('ipad') != -1){
+                                isTouch = true;
+                            }
+                            if (agent.indexOf('iphone') != -1){
+                                isTouch = true;
+                            }
+                            if (agent.indexOf('ipod') != -1){
+                                isTouch = true;
+                            }
+                            if (agent.indexOf('palm') != -1){
+                                isTouch = true;
+                            }
+                            if (agent.indexOf('series60') != -1){
+                                isTouch = true;
+                            }
+                            if (agent.indexOf('symbian') != -1){
+                                isTouch = true;
+                            }
+                            if (agent.indexOf('windows ce') != -1){
+                                isTouch = true;
+                            }
+
+                            return isTouch;
                         },
-                        isTouchDevice:function(){// Detect touchscreen devices
-                            var os = navigator.platform;
-                            
-                            if (os.toLowerCase().indexOf('win') != -1){
-                                return window.navigator.msMaxTouchPoints;
-                            }
-                            else {
-                                return 'ontouchstart' in document;
-                            }
+                        touchNavigation:function(parent, child){// One finger Navigation for touchscreen devices
+                            var prevX, prevY, currX, currY, touch, moveTo, thumbnailsPositionX, thumbnailsPositionY,
+                            thumbnailWidth = ThumbnailWidth+ThumbnailPaddingRight+ThumbnailPaddingLeft+2*ThumbnailBorderSize,
+                            thumbnailHeight = ThumbnailHeight+ThumbnailPaddingTop+ThumbnailPaddingBottom+2*ThumbnailBorderSize;
+                                    
+                                    
+                            parent.bind('touchstart', function(e){
+                                touch = e.originalEvent.touches[0];
+                                prevX = touch.clientX;
+                                prevY = touch.clientY;
+                            });
+
+                            parent.bind('touchmove', function(e){                                
+                                touch = e.originalEvent.touches[0];
+                                currX = touch.clientX;
+                                currY = touch.clientY;
+                                thumbnailsPositionX = currX>prevX ? parseInt(child.css('margin-left'))+(currX-prevX):parseInt(child.css('margin-left'))-(prevX-currX);
+                                thumbnailsPositionY = currY>prevY ? parseInt(child.css('margin-top'))+(currY-prevY):parseInt(child.css('margin-top'))-(prevY-currY);
+
+                                if (thumbnailsPositionX < (-1)*(child.width()-parent.width())){
+                                    thumbnailsPositionX = (-1)*(child.width()-parent.width());
+                                }
+                                else if (thumbnailsPositionX > 0){
+                                    thumbnailsPositionX = 0;
+                                }
+                                else{                                    
+                                    e.preventDefault();
+                                }
+                                
+                                if (thumbnailsPositionY < (-1)*(child.height()-parent.height())){
+                                    thumbnailsPositionY = (-1)*(child.height()-parent.height());
+                                }
+                                else if (thumbnailsPositionY > 0){
+                                    thumbnailsPositionY = 0;
+                                }
+                                else{                                    
+                                    e.preventDefault();
+                                }
+
+                                prevX = currX;
+                                prevY = currY;
+
+                                child.css('margin-left', thumbnailsPositionX);
+                                child.css('margin-top', thumbnailsPositionY);
+                            });
+
+                            parent.bind('touchend', function(e){
+                                e.preventDefault();
+                                
+                                if (thumbnailsPositionX%(ThumbnailWidth+ThumbnailsSpacing) != 0){                                    
+                                    if ((ThumbnailsPosition == 'horizontal') && $('.DOP_ThumbnailScroller_Thumbnails', Container).width() > $('.DOP_ThumbnailScroller_ThumbnailsWrapper', Container).width()){
+                                        if (prevX > touch.clientX){
+                                            moveTo = parseInt(thumbnailsPositionX/(thumbnailWidth+ThumbnailsSpacing))*(thumbnailWidth+ThumbnailsSpacing);
+                                        }
+                                        else{
+                                            moveTo = (parseInt(thumbnailsPositionX/(thumbnailWidth+ThumbnailsSpacing))-1)*(thumbnailWidth+ThumbnailsSpacing);
+                                        }
+                                        arrowsClicked = true;
+                                        
+                                        $('.DOP_ThumbnailScroller_Thumbnails', Container).stop(true, true).animate({'margin-left': moveTo}, ThumbnailsNavigationArrowsSpeed, function(){
+                                            arrowsClicked = false;
+                                        });
+                                    }
+                                }
+
+                                if (thumbnailsPositionY%(ThumbnailHeight+ThumbnailsSpacing) != 0){   
+                                    if ((ThumbnailsPosition == 'vertical') && $('.DOP_ThumbnailScroller_Thumbnails', Container).height() > $('.DOP_ThumbnailScroller_ThumbnailsWrapper', Container).height()){
+                                        if (prevY > touch.clientY){
+                                            moveTo = parseInt(thumbnailsPositionY/(thumbnailHeight+ThumbnailsSpacing))*(thumbnailHeight+ThumbnailsSpacing);
+                                        }
+                                        else{
+                                            moveTo = (parseInt(thumbnailsPositionY/(thumbnailHeight+ThumbnailsSpacing))-1)*(thumbnailHeight+ThumbnailsSpacing);
+                                        }
+                                        arrowsClicked = true;
+                                        
+                                        $('.DOP_ThumbnailScroller_Thumbnails', Container).stop(true, true).animate({'margin-top': moveTo}, ThumbnailsNavigationArrowsSpeed, function(){
+                                            arrowsClicked = false;
+                                        });
+                                    }      
+                                }
+                            });
                         },
 
-                        openLink:function(url, target){// Open a link
+                        openLink:function(url, target){// Open a link.
                             switch (target.toLowerCase()){
                                 case '_blank':
                                     window.open(url);
@@ -2436,7 +2296,7 @@
                             }
                         },
 
-                        validateCharacters:function(str, allowedCharacters){// Verify if a string contains allowed characters
+                        validateCharacters:function(str, allowedCharacters){
                             var characters = str.split(''), i;
 
                             for (i=0; i<characters.length; i++){
@@ -2446,7 +2306,7 @@
                             }
                             return true;
                         },
-                        cleanInput:function(input, allowedCharacters, firstNotAllowed, min){// Remove characters that aren't allowed from a string
+                        cleanInput:function(input, allowedCharacters, firstNotAllowed, min){
                             var characters = $(input).val().split(''),
                             returnStr = '', i, startIndex = 0;
 
@@ -2466,12 +2326,7 @@
                             
                             $(input).val(returnStr);
                         },
-                        getWithDecimals:function(number, length){
-                            length = length == undefined ? 2:length;
-                            
-                            return parseInt(number) == number ? String(number):parseFloat(number).toFixed(length);
-                        },
-                        validEmail:function(email){// Validate email
+                        validEmail:function(email){
                             var filter = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
                             
                             if (filter.test(email)){
@@ -2480,7 +2335,7 @@
                             return false;
                         },
                         
-                        $_GET:function(variable){// Parse $_GET variables
+                        $_GET:function(variable){ 
                             var url = window.location.href.split('?')[1],
                             variables = url != undefined ? url.split('&'):[],
                             i; 
@@ -2494,112 +2349,51 @@
                             
                             return undefined;
                         },
-                        acaoBuster:function(dataURL){// Access-Control-Allow-Origin buster
+                        acaoBuster:function(dataURL){
                             var topURL = window.location.href,
                             pathPiece1 = '', pathPiece2 = '';
                             
-                            if (prototypes.getDomain(topURL) == prototypes.getDomain(dataURL)){
-                                if (dataURL.indexOf('https') != -1 || dataURL.indexOf('http') != -1){
-                                    if (topURL.indexOf('http://www.') != -1){
-                                        pathPiece1 = 'http://www.';
-                                    }
-                                    else if (topURL.indexOf('http://') != -1){
-                                        pathPiece1 = 'http://';
-                                    }
-                                    else if (topURL.indexOf('https://www.') != -1){
-                                        pathPiece1 = 'https://www.';
-                                    }
-                                    else if (topURL.indexOf('https://') != -1){
-                                        pathPiece1 = 'https://';
-                                    }
-
-                                    if (dataURL.indexOf('http://www.') != -1){
-                                        pathPiece2 = dataURL.split('http://www.')[1];
-                                    }
-                                    else if (dataURL.indexOf('http://') != -1){
-                                        pathPiece2 = dataURL.split('http://')[1];
-                                    }
-                                    else if (dataURL.indexOf('https://www.') != -1){
-                                        pathPiece2 = dataURL.split('https://www.')[1];
-                                    }
-                                    else if (dataURL.indexOf('https://') != -1){
-                                        pathPiece2 = dataURL.split('https://')[1];
-                                    }
-
-                                    return pathPiece1+pathPiece2;
+                            if (dataURL.indexOf('https') != -1 || dataURL.indexOf('http') != -1){
+                                if (topURL.indexOf('http://www.') != -1){
+                                    pathPiece1 = 'http://www.';
                                 }
-                                else{
-                                    return dataURL;
+                                else if (topURL.indexOf('http://') != -1){
+                                    pathPiece1 = 'http://';
                                 }
+                                else if (topURL.indexOf('https://www.') != -1){
+                                    pathPiece1 = 'https://www.';
+                                }
+                                else if (topURL.indexOf('https://') != -1){
+                                    pathPiece1 = 'https://';
+                                }
+                                    
+                                if (dataURL.indexOf('http://www.') != -1){
+                                    pathPiece2 = dataURL.split('http://www.')[1];
+                                }
+                                else if (dataURL.indexOf('http://') != -1){
+                                    pathPiece2 = dataURL.split('http://')[1];
+                                }
+                                else if (dataURL.indexOf('https://www.') != -1){
+                                    pathPiece2 = dataURL.split('https://www.')[1];
+                                }
+                                else if (dataURL.indexOf('https://') != -1){
+                                    pathPiece2 = dataURL.split('https://')[1];
+                                }
+                                
+                                return pathPiece1+pathPiece2;
                             }
                             else{
                                 return dataURL;
                             }
                         },
-                        getDomain:function(url, includeSubdomain){
-                            var domain = url;
-                            includeSubdomain = includeSubdomain == undefined ? true:false;
- 
-                            domain = domain.replace(new RegExp(/^\s+/),""); // Remove white spaces from the begining of the url.
-                            domain = domain.replace(new RegExp(/\s+$/),""); // Remove white spaces from the end of the url.
-                            domain = domain.replace(new RegExp(/\\/g),"/"); // If found , convert back slashes to forward slashes.
-                            domain = domain.replace(new RegExp(/^http\:\/\/|^https\:\/\/|^ftp\:\/\//i),""); // If there, removes 'http://', 'https://' or 'ftp://' from the begining.
-                            domain = domain.replace(new RegExp(/^www\./i),""); // If there, removes 'www.' from the begining.
-                            domain = domain.replace(new RegExp(/\/(.*)/),""); // Remove complete string from first forward slaash on.
-
-                            return domain;
-                        },
-                        isSubdomain:function(url){
-                            var subdomain;
- 
-                            url = url.replace(new RegExp(/^\s+/),""); // Remove white spaces from the begining of the url.
-                            url = url.replace(new RegExp(/\s+$/),""); // Remove white spaces from the end of the url.
-                            url = url.replace(new RegExp(/\\/g),"/"); // If found , convert back slashes to forward slashes.
-                            url = url.replace(new RegExp(/^http\:\/\/|^https\:\/\/|^ftp\:\/\//i),""); // If there, removes 'http://', 'https://' or 'ftp://' from the begining.
-                            url = url.replace(new RegExp(/^www\./i),""); // If there, removes 'www.' from the begining.
-                            url = url.replace(new RegExp(/\/(.*)/),""); // Remove complete string from first forward slaash on.
- 
-                            if (url.match(new RegExp(/\.[a-z]{2,3}\.[a-z]{2}$/i))){ // Remove '.??.??' or '.???.??' from end - e.g. '.CO.UK', '.COM.AU'
-                                url = url.replace(new RegExp(/\.[a-z]{2,3}\.[a-z]{2}$/i),"");
-                            }
-                            else if (url.match(new RegExp(/\.[a-z]{2,4}$/i))){ // Removes '.??' or '.???' or '.????' from end - e.g. '.US', '.COM', '.INFO'
-                                url = url.replace(new RegExp(/\.[a-z]{2,4}$/i),"");
-                            }
-                            subdomain = (url.match(new RegExp(/\./g))) ? true : false; // Check to see if there is a dot '.' left in the string.
-
-                            return(subdomain);
-                        },
-                        
-                        doHideBuster:function(item){// Make all parents & current item visible
-                            var parent = item.parent(),
-                            items = new Array();
-                                
-                            if (item.prop('tagName') != undefined && item.prop('tagName').toLowerCase() != 'body'){
-                                items = prototypes.doHideBuster(parent);
-                            }
-                            
-                            if (item.css('display') == 'none'){
-                                item.css('display', 'block');
-                                items.push(item);
-                            }
-                            
-                            return items;
-                        },
-                        undoHideBuster:function(items){// Hide items in the array
-                            var i;
-                            
-                            for (i=0; i<items.length; i++){
-                                items[i].css('display', 'none');
-                            }
-                        },
                        
-                        setCookie:function(c_name, value, expiredays){// Set cookie (name, value, expire in no days)
+                        setCookie:function(c_name, value, expiredays){
                             var exdate = new Date();
                             exdate.setDate(exdate.getDate()+expiredays);
 
                             document.cookie = c_name+"="+escape(value)+((expiredays==null) ? "" : ";expires="+exdate.toUTCString())+";javahere=yes;path=/";
                         },
-                        readCookie:function(name){// Read cookie (name) 
+                        readCookie:function(name){
                             var nameEQ = name+"=",
                             ca = document.cookie.split(";");
 
@@ -2611,17 +2405,17 @@
                                 } 
 
                                 if (c.indexOf(nameEQ) == 0){
-                                    return unescape(c.substring(nameEQ.length, c.length));
+                                    return c.substring(nameEQ.length, c.length);
                                 } 
                             }
                             return null;
                         },
-                        deleteCookie:function(c_name, path, domain){// Delete cookie (name, path, domain)
+                        deleteCookie:function(c_name, path, domain){
                             if (readCookie(c_name)){
                                 document.cookie = c_name+"="+((path) ? ";path="+path:"")+((domain) ? ";domain="+domain:"")+";expires=Thu, 01-Jan-1970 00:00:01 GMT";
                             }
                         }
-                    };
+                     };
 
         return methods.init.apply(this);
     }

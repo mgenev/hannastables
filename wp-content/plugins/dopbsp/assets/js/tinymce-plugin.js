@@ -1,12 +1,12 @@
 /*
 * Title                   : Booking System PRO (WordPress Plugin)
-* Version                 : 1.8
+* Version                 : 1.2
 * File                    : tinymce-plugin.php
-* File Version            : 1.1
-* Created / Last Modified : 31 July 2013
-* Author                  : Dot on Paper
-* Copyright               : © 2012 Dot on Paper
-* Website                 : http://www.dotonpaper.net
+* File Version            : 1.0
+* Created / Last Modified : 15 July 2012
+* Author                  : Marius-Cristian Donea
+* Copyright               : © 2012 Marius-Cristian Donea
+* Website                 : http://www.mariuscristiandonea.com
 * Description             : TinyMCE Editor Plugin.
 */
 
@@ -48,9 +48,9 @@
 
         getInfo:function(){
             return {longname  : 'Booking System PRO',
-                    author    : 'Dot on Paper',
-                    authorurl : 'http://www.dotonpaper.net',
-                    infourl   : 'http://www.dotonpaper.net',
+                    author    : 'Marius-Cristian Donea',
+                    authorurl : 'http://www.mariuscristiandonea.com',
+                    infourl   : 'http://www.mariuscristiandonea.com',
                     version   : '1.0'};
         }
     });

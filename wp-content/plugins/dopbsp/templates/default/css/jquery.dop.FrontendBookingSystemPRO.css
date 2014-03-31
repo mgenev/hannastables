@@ -2,26 +2,20 @@
 
 /*
 * Title                   : Booking System PRO (WordPress Plugin)
-* Version                 : 1.9
+* Version                 : 1.2
 * File                    : jquery.dop.FrontendBookingSystemPRO.css
-* File Version            : 1.5
-* Created / Last Modified : 16 December 2013
-* Author                  : Dot on Paper
-* Copyright               : © 2012 Dot on Paper
-* Website                 : http://www.dotonpaper.net
+* File Version            : 1.2
+* Created / Last Modified : 01 November 2012
+* Author                  : Marius-Cristian Donea
+* Copyright               : © 2012 Marius-Cristian Donea
+* Website                 : http://www.mariuscristiandonea.com
 * Description             : Booking System PRO Stylesheet.
 */
 
-.DOPBookingSystemPROContainer{
-    min-width: 250px;
-}
-
-.DOPBookingSystemPROContainer .loader{
-    background: url('../images/loader.gif') no-repeat center;
-    background-color: #eeeeee;
-    height: 15px;
-    margin: 10px 0 0 0;
-    padding: 5px 0;
+#main .content{
+    margin: 0 auto;
+    padding: 20px 0 30px 0;
+    width: 960px;
 }
 
 /******************************************************************************* Container */
@@ -66,7 +60,7 @@
     z-index: 100;
 }
 
-.DOPBookingSystemPRO_Navigation .previous_btn.hover{
+.DOPBookingSystemPRO_Navigation .previous_btn:hover{
     background: url("../images/sprite.png") -25px 0;
 }
 
@@ -83,7 +77,7 @@
     z-index: 200;
 }
 
-.DOPBookingSystemPRO_Navigation .next_btn.hover{
+.DOPBookingSystemPRO_Navigation .next_btn:hover{
     background: url("../images/sprite.png") -75px 0;
 }
 
@@ -100,7 +94,7 @@
     z-index: 200;
 }
 
-.DOPBookingSystemPRO_Navigation .add_btn.hover{
+.DOPBookingSystemPRO_Navigation .add_btn:hover{
     background: url("../images/sprite.png") -125px 0;
 }
 
@@ -118,7 +112,7 @@
     z-index: 200;
 }
 
-.DOPBookingSystemPRO_Navigation .remove_btn.hover{
+.DOPBookingSystemPRO_Navigation .remove_btn:hover{
     background: url("../images/sprite.png") -175px 0;
 }
 
@@ -159,14 +153,6 @@
     z-index: 300;
 }
 
-.DOPBookingSystemPRO_Calendar .loader{
-    background: url('../images/loader.gif') no-repeat center;
-    background-color: #eeeeee;
-    height: 15px;
-    margin: 10px 0 0 0;
-    padding: 5px 0;
-}
-
 .DOPBookingSystemPRO_Month{
     background: #eeeeee;
     margin: 10px 0 0 0;
@@ -188,7 +174,6 @@
 /************************************************************************ Day */
 
 .DOPBookingSystemPRO_Day{
-    clear: none !important;
     float: left;
     margin: 2px 0 0 0;
     padding: 0;
@@ -214,12 +199,11 @@
 .DOPBookingSystemPRO_Day .bind-right .header{
     background: #cccccc !important; /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Change to your DEFAULT color. */
     border: 1px solid #cccccc !important; /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Change to your DEFAULT color. */
-    border-left: none !important;
-    border-right: none !important;
+    border-left: none;
+    border-right: none;
     font-family: Arial, Helvetica, sans-serif !important;
     font-size: 12px !important;
     font-weight: bold !important;
-    height: auto !important;
     line-height: 15px !important;
     margin: 0 !important;
     padding: 2px 0 2px 0 !important;
@@ -251,12 +235,8 @@
     -moz-border-topright-radius: 2px !important;
     border-top-left-radius: 2px !important;
     border-top-right-radius: 2px !important;
-    -webkit-box-sizing: content-box !important;
-    -moz-box-sizing: content-box !important;
-    box-sizing: content-box !important;
     display: block !important;
     font-size: 12px !important;
-    height: auto !important;
     line-height: 1em !important;
     margin: 0 !important;
     padding: 2px 0 2px 5px !important;
@@ -295,7 +275,7 @@
     -moz-border-topright-radius: 2px !important;
     border-top-left-radius: 0px !important;
     border-top-right-radius: 2px !important;
-    border-left: none !important;
+    border-left-color: transparent !important;
 }
 
 .DOPBookingSystemPRO_Day .bind-content .header .day{
@@ -317,16 +297,10 @@
     -webkit-border-top-left-radius: 2px !important;
     -moz-border-topleft-radius: 2px !important;
     border-top-left-radius: 2px !important;
-    -webkit-box-sizing: content-box !important;
-    -moz-box-sizing: content-box !important;
-    box-sizing: content-box !important;
     height: 19px;
     left: -1px;
-    margin: 0 !important;
-    padding: 0px 0px 0px 1px !important;
     position: absolute !important;
     top: -1px;
-    width: 50% !important;
 }
 
 .DOPBookingSystemPRO_Day .bind-content .header .ci{
@@ -336,15 +310,10 @@
     -webkit-border-top-right-radius: 2px !important;
     -moz-border-topright-radius: 2px !important;
     border-top-right-radius: 2px !important;
-    -webkit-box-sizing: content-box !important;
-    -moz-box-sizing: content-box !important;
-    box-sizing: content-box !important;
     height: 19px;
     right: -1px;
-    margin: 0 !important;
     position: absolute !important;
     top: -1px;
-    width: 50% !important;
 }
 
 .DOPBookingSystemPRO_Day .bind-content.group2 .header .co{
@@ -363,7 +332,6 @@
 
 .DOPBookingSystemPRO_Day .bind-content.group0.extended .header .co,
 .DOPBookingSystemPRO_Day .bind-content.group1.extended .header .co,
-.DOPBookingSystemPRO_Day .bind-content.group1 .header .ci,
 .DOPBookingSystemPRO_Day .bind-content.group2 .header .ci{
     -webkit-border-top-right-radius: 0px !important;
     -moz-border-topright-radius: 0px !important;
@@ -395,12 +363,8 @@
     -moz-border-bottomright-radius: 2px !important;
     border-bottom-left-radius: 2px !important;
     border-bottom-right-radius: 2px !important;
-    -webkit-box-sizing: content-box !important;
-    -moz-box-sizing: content-box !important;
-    box-sizing: content-box !important;
     color: #222222 !important;
-    display: block;
-    float: none !important;
+    display: block !important;
     font-family: Arial, Helvetica, sans-serif !important;
     font-size: 12px !important;
     line-height: 1em !important;
@@ -420,16 +384,9 @@
     -webkit-border-bottom-left-radius: 2px !important;
     -moz-border-bottomleft-radius: 2px !important;
     border-bottom-left-radius: 2px !important;
-    -webkit-box-sizing: content-box !important;
-    -moz-box-sizing: content-box !important;
-    box-sizing: content-box !important;
     left: -1px;
-    height: inherit !important;
-    margin: 0 !important;
-    padding: 4px 0px 4px 1px !important;
     position: absolute !important;
     top: 0;
-    width: 50% !important;
 }
 
 .DOPBookingSystemPRO_Day .bind-content .content .ci{
@@ -440,16 +397,9 @@
     -webkit-border-bottom-right-radius: 2px !important;
     -moz-border-bottomright-radius: 2px !important;
     border-bottom-right-radius: 2px !important;
-    -webkit-box-sizing: content-box !important;
-    -moz-box-sizing: content-box !important;
-    box-sizing: content-box !important;
-    height: inherit !important;
-    margin: 0 !important;
-    padding: 4px 1px 4px 0 !important;
-    position: absolute !important;
     right: -1px;
+    position: absolute !important;
     top: 0;
-    width: 50% !important;
 }
 
 .DOPBookingSystemPRO_Day .bind-content.group1 .content{
@@ -493,7 +443,7 @@
     -webkit-border-bottom-left-radius: 0px !important;
     -moz-border-bottomleft-radius: 0px !important;
     border-bottom-left-radius: 0px !important;
-    border-left: none !important;
+    border-left-color: transparent !important;
 }
 
 .DOPBookingSystemPRO_Day .bind-content.group1 .content .ci,
@@ -512,7 +462,6 @@
     float: left;
     font-size: 12px;        
     line-height: 1em;
-    margin: 0 !important;
     text-decoration: line-through;
 }
 
@@ -522,7 +471,6 @@
     font-size: 12px;    
     font-weight: bold;
     line-height: 1em;
-    margin: 0 !important;
     padding: 0 5px 0 0;
 }
 
@@ -530,7 +478,6 @@
     color: #909090;
     font-size: 11px;
     line-height: 1em;
-    margin: 0 !important;
     width: 100%;
 }
 
@@ -738,25 +685,6 @@
     display: none;
 }
 
-/* Grouped Days - First Column */
-
-.DOPBookingSystemPRO_Day.first-column .bind-left{
-    opacity: 0 !important;
-    filter: alpha(opacity=0) !important;
-}
-
-/* Grouped Days - Last Column */
-
-.DOPBookingSystemPRO_Day.last-column .bind-content.group1 .header .ci,
-.DOPBookingSystemPRO_Day.last-column .bind-content.group2 .header .ci{
-    right: 0px !important;
-}
-
-.DOPBookingSystemPRO_Day.last-column .bind-right{
-    opacity: 0 !important;
-    filter: alpha(opacity=0) !important;
-}
-
 /*********************************************************************** Hour */ 
 
 .DOPBookingSystemPRO_Hours{
@@ -885,7 +813,7 @@
     float: left;
     font-size: 11px;
     line-height: 15px;
-    padding: 2px 10px;
+    padding: 2px 0px 2px 10px;
 }
 
 .DOPBookingSystemPRO_Hour .bind-content .info{
@@ -999,9 +927,7 @@
 
 /* Selected Hour */
 
-.DOPBookingSystemPRO_Hour.selected .bind-content,
-.DOPBookingSystemPRO_Hour.selected .bind-top,
-.DOPBookingSystemPRO_Hour.selected .bind-bottom{    
+.DOPBookingSystemPRO_Hour.selected .bind-content{    
     border-color: #000000; /* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Change to your SELECTED color. */
 }
 
@@ -1043,10 +969,6 @@
     width: 250px;
 }
 
-.DOPBookingSystemPRO_Sidebar.bottom{
-    width: 100%;
-}
-
 .DOPBookingSystemPRO_Sidebar .DOPBookingSystemPRO_HoursSelect,
 .DOPBookingSystemPRO_Sidebar .DOPBookingSystemPRO_NoItemsSelect,
 .DOPBookingSystemPRO_Sidebar .DOPBookingSystemPRO_ContactForm{
@@ -1061,7 +983,6 @@
     border: 1px solid #cccccc;
     margin: 5px;
     padding: 0 10px 10px 10px;
-    width: auto;
 }
 
 .DOPBookingSystemPRO_Sidebar .section-item{
@@ -1082,7 +1003,6 @@
     display: none;
     font-size: 24px;
     font-weight: bold;
-    line-height: 1em !important;
     margin: 10px 0 0 0;
     padding: 5px 0 5px 0;
     text-align: center;
@@ -1095,12 +1015,12 @@
 .DOPBookingSystemPRO_Sidebar .section-item.price .small{
     color: #202020;
     font-size: 12px;
-    line-height: 1em !important;
+    line-height: 1.5em;
 }
 
 .DOPBookingSystemPRO_Sidebar .section-item.price .medium{
     font-size: 14px;
-    line-height: 1em !important;
+    line-height: 1.5em;
 }
 
 .DOPBookingSystemPRO_Sidebar .section-item.message{
@@ -1135,7 +1055,6 @@
 }
 
 .DOPBookingSystemPRO_Sidebar .section-item label.radio{
-    float: left;
     font-weight: normal;
 }
 
@@ -1163,7 +1082,7 @@
     -webkit-box-shadow: none !important;
     color: #333333 !important;
     font-family: Arial, Helvetica, sans-serif !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
     line-height: 1em !important;
     margin: 5px 0 0 0;
     padding: 4px 2px;
@@ -1262,16 +1181,9 @@
     color: #000000 !important;
 }
 
-.DOPBookingSystemPRO_Sidebar .section-item .DOPBookingSystemPRO_SubmitLoader{
-    background: url('../images/loader-submit.gif') no-repeat center;
-    display: none;
-    height: 30px;
-    width: 230px;
-}
+/******************************************************************************* Sidebar Widget */
 
-/******************************************************************************* Outer Sidebar */
-
-.DOPBookingSystemPRO_OuterSidebar{
+.DOPBookingSystemPRO_SidebarWidget{
     background: #eeeeee;
     -webkit-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -1279,17 +1191,16 @@
     float: left;
     font-family: Arial, Helvetica, sans-serif !important;
     margin: 0;
-    max-width: 100%;
-    min-width: 250px;
+    width: 250px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .DOPBookingSystemPRO_HoursSelect,
-.DOPBookingSystemPRO_OuterSidebar .DOPBookingSystemPRO_NoItemsSelect,
-.DOPBookingSystemPRO_OuterSidebar .DOPBookingSystemPRO_ContactForm{
+.DOPBookingSystemPRO_SidebarWidget .DOPBookingSystemPRO_HoursSelect,
+.DOPBookingSystemPRO_SidebarWidget .DOPBookingSystemPRO_NoItemsSelect,
+.DOPBookingSystemPRO_SidebarWidget .DOPBookingSystemPRO_ContactForm{
     display: none;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section{
+.DOPBookingSystemPRO_SidebarWidget .section{
     background: #f3f3f3;
     -webkit-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -1299,20 +1210,20 @@
     padding: 0 10px 10px 10px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item{
+.DOPBookingSystemPRO_SidebarWidget .section-item{
     margin: 10px 0 0 0;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item.left{
+.DOPBookingSystemPRO_SidebarWidget .section-item.left{
     float: left;
     width: 106px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item.second{
+.DOPBookingSystemPRO_SidebarWidget .section-item.second{
     margin: 10px 0 0 5px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item.price{
+.DOPBookingSystemPRO_SidebarWidget .section-item.price{
     color: #000000;     
     display: none;
     font-size: 24px;
@@ -1322,22 +1233,22 @@
     text-align: center;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item.price .cut{
+.DOPBookingSystemPRO_SidebarWidget .section-item.price .cut{
     text-decoration: line-through;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item.price .small{
+.DOPBookingSystemPRO_SidebarWidget .section-item.price .small{
     color: #202020;
     font-size: 12px;
     line-height: 1.5em;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item.price .medium{
+.DOPBookingSystemPRO_SidebarWidget .section-item.price .medium{
     font-size: 14px;
     line-height: 1.5em;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item.message{
+.DOPBookingSystemPRO_SidebarWidget .section-item.message{
     color: #ff0000; 
     display: none;    
     font-size: 12px;
@@ -1347,11 +1258,11 @@
     text-align: center;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item.message .success{
+.DOPBookingSystemPRO_SidebarWidget .section-item.message .success{
     color: #0e9f0e; 
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item.title{
+.DOPBookingSystemPRO_SidebarWidget .section-item.title{
     color: #606060;     
     border-bottom: 1px solid #cccccc;
     font-size: 13px;
@@ -1361,7 +1272,7 @@
     padding: 0 0 10px 0;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item label{
+.DOPBookingSystemPRO_SidebarWidget .section-item label{
     color: #606060;
     display: block;
     font-size: 12px;
@@ -1369,24 +1280,24 @@
     line-height: 1em;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item label.radio{
+.DOPBookingSystemPRO_SidebarWidget .section-item label.radio{
     font-weight: normal;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item label.checkbox{
+.DOPBookingSystemPRO_SidebarWidget .section-item label.checkbox{
     font-weight: normal;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item label a{
+.DOPBookingSystemPRO_SidebarWidget .section-item label a{
     color: #222222;
     text-decoration: none;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item label a:hover{
+.DOPBookingSystemPRO_SidebarWidget .section-item label a:hover{
     text-decoration: underline;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item input{
+.DOPBookingSystemPRO_SidebarWidget .section-item input{
     background: #ffffff;
     border: 1px solid #dfdfdf;
     -webkit-border-radius: 3px;
@@ -1404,11 +1315,11 @@
     width: 212px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item input.small{
+.DOPBookingSystemPRO_SidebarWidget .section-item input.small{
     width: 100px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item select{
+.DOPBookingSystemPRO_SidebarWidget .section-item select{
     background: #ffffff;
     border: 1px solid #dfdfdf;
     -webkit-border-radius: 3px;
@@ -1423,17 +1334,17 @@
     width: 212px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item select.small{    
+.DOPBookingSystemPRO_SidebarWidget .section-item select.small{    
     width: 100px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item select[multiple=multiple]{
+.DOPBookingSystemPRO_SidebarWidget .section-item select[multiple=multiple]{
     border: 0 inset #dfdfdf;
     border: 1px solid #dfdfdf;
     width: 216px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item textarea{
+.DOPBookingSystemPRO_SidebarWidget .section-item textarea{
     background: #ffffff;
     border: 1px solid #dfdfdf;
     -webkit-border-radius: 3px;
@@ -1454,22 +1365,22 @@
     width: 212px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item input[type=radio],
-.DOPBookingSystemPRO_OuterSidebar .section-item input[type=checkbox]{
+.DOPBookingSystemPRO_SidebarWidget .section-item input[type=radio],
+.DOPBookingSystemPRO_SidebarWidget .section-item input[type=checkbox]{
     float: left;
     margin: 0 5px 0 0;
     padding: 0;
     width: auto;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item input:focus,
-.DOPBookingSystemPRO_OuterSidebar .section-item select:focus,
-.DOPBookingSystemPRO_OuterSidebar .section-item textarea:focus{
+.DOPBookingSystemPRO_SidebarWidget .section-item input:focus,
+.DOPBookingSystemPRO_SidebarWidget .section-item select:focus,
+.DOPBookingSystemPRO_SidebarWidget .section-item textarea:focus{
     border-color: #bbce3d;
     outline: none;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item input[type=submit]{
+.DOPBookingSystemPRO_SidebarWidget .section-item input[type=submit]{
     background: #999;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#eeeeee');
     background: -webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#eeeeee));
@@ -1487,7 +1398,7 @@
     width: 218px;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item input[type=submit]:hover{
+.DOPBookingSystemPRO_SidebarWidget .section-item input[type=submit]:hover{
     background: #999999;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bbbbbb', endColorstr='#dddddd');
     background: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#dddddd));
@@ -1496,30 +1407,22 @@
     color: #000000 !important;
 }
 
-.DOPBookingSystemPRO_OuterSidebar .section-item .DOPBookingSystemPRO_SubmitLoader{
-    background: url('../images/loader-submit.gif') no-repeat center;
-    display: none;
-    height: 30px;
-    width: 230px;
-}
-
 /******************************************************************************* Info */
 
 .DOPBookingSystemPRO_Info{
-    background: #fbfbfb;
-    border: 1px solid #c0c0c0;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    -webkit-box-shadow: 0px 0px 4px #b0b0b0;
-    -moz-box-shadow: 0px 0px 4px #b0b0b0;
-    box-shadow: 0px 0px 4px #b0b0b0;
+    background: #fcfcfc;
+    border: 1px solid #909090;
+    -webkit-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 2px 2px 4px #b0b0b0;
+    -webkit-box-shadow: 2px 2px 4px #b0b0b0;
+    box-shadow: 2px 2px 4px #b0b0b0;
     color: #606060;
     display: none;
-    font-size: 12px;
-    left: 0px;
-    line-height: 1.5em;
+    line-height: 1em;
     max-width: 300px;
+    left: 0px;
     padding: 10px;
     position: absolute;
     top: 0px;
