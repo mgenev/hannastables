@@ -31,16 +31,7 @@ define('DB_COLLATE', '');
  * You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
  *
  * @since 2.6.0
- */
-define('AUTH_KEY',         'pVCgMjYD2XdMHGSONKdiuUYVPZkvUMIlZ08r8GuH5KS3gg4EAarDtGthAmHGAz8U');
-define('SECURE_AUTH_KEY',  'V0zpoc0230Hg5pW8aQOCoQYi3pEpjGONNdisWkkFS0GS7qrf17UvQVXNTlJgBnQ4');
-define('LOGGED_IN_KEY',    'DCfOGNEHQsjMIF8kUvzGmywwUvE6o0TcfyqhegKhRUQr1iKRLRQEUZvrXhzhl0JH');
-define('NONCE_KEY',        'G2I1DQtHUyCvzn9jMcbzjLoCndw68zYz2sVLor0ClLMetbII3czvd1tDYY2LcHWs');
-define('AUTH_SALT',        'BVcsxzuxOkpyyDVtDg1WINE9N8kcbfrnVBz2sbTjpB077Ez6vYAUf7ads7byLD58');
-define('SECURE_AUTH_SALT', 'IV61UHJK5gAotoe6CIggOy6t582oe42Y7GdTMtxIOHC8dj8bGTd6pCji4SeznwGV');
-define('LOGGED_IN_SALT',   '0FrqSG1y32rDcOCWTuNPB5Gygdh9RMpcY1Gq1Rb7OhnmRaZUh689WVosW9LzcMiz');
-define('NONCE_SALT',       '8mrDkghLRhzqxvUK1yv5YY2lGMM1JsH9bPel3oEIKkCB0yGvCqydgsYFAlSBBo8h');
-
+=
 /**#@-*/
 
 /**
